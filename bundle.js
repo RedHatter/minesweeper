@@ -730,10 +730,10 @@
     	const block = {
     		c: function create() {
     			button = element("button");
-    			attr_dev(button, "class", button_class_value = "" + null_to_empty((ctx.flag !== FLAG ? '' : ctx.value === MINE ? 'valid' : 'invalid')) + " svelte-unoqk2");
+    			attr_dev(button, "class", button_class_value = "" + null_to_empty((ctx.flag !== FLAG ? '' : ctx.value === MINE ? 'valid' : 'invalid')) + " svelte-3bfx0p");
     			attr_dev(button, "data-value", button_data_value_value = ctx.flag || ctx.value);
     			button.disabled = true;
-    			add_location(button, file$1, 106, 2, 4355);
+    			add_location(button, file$1, 106, 2, 4357);
     		},
 
     		m: function mount(target, anchor) {
@@ -741,7 +741,7 @@
     		},
 
     		p: function update(changed, ctx) {
-    			if ((changed.flag || changed.value) && button_class_value !== (button_class_value = "" + null_to_empty((ctx.flag !== FLAG ? '' : ctx.value === MINE ? 'valid' : 'invalid')) + " svelte-unoqk2")) {
+    			if ((changed.flag || changed.value) && button_class_value !== (button_class_value = "" + null_to_empty((ctx.flag !== FLAG ? '' : ctx.value === MINE ? 'valid' : 'invalid')) + " svelte-3bfx0p")) {
     				attr_dev(button, "class", button_class_value);
     			}
 
@@ -768,8 +768,8 @@
     		c: function create() {
     			button = element("button");
     			attr_dev(button, "data-value", ctx.flag);
-    			attr_dev(button, "class", "svelte-unoqk2");
-    			add_location(button, file$1, 104, 2, 4293);
+    			attr_dev(button, "class", "svelte-3bfx0p");
+    			add_location(button, file$1, 104, 2, 4295);
 
     			dispose = [
     				listen_dev(button, "click", ctx.click_handler),
