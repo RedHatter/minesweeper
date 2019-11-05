@@ -44,6 +44,9 @@
             ? assign({}, assign(ctx.$$scope.changed || {}, definition[1](fn ? fn(changed) : {})))
             : ctx.$$scope.changed || {};
     }
+    function null_to_empty(value) {
+        return value == null ? '' : value;
+    }
 
     function append(target, node) {
         target.appendChild(node);
@@ -709,7 +712,7 @@
     }
 
     const BLANK = '';
-    const MINE = 'm';
+    const MINE = '*';
     const HIDDEN = false;
     const VISIBLE = true;
     const UNKNOWN = '?';
@@ -720,31 +723,30 @@
 
     const file$1 = "src/Cell.svelte";
 
-    // (93:0) {:else}
+    // (106:0) {:else}
     function create_else_block$1(ctx) {
-    	var button, t, button_class_value;
+    	var button, button_class_value, button_data_value_value;
 
     	const block = {
     		c: function create() {
     			button = element("button");
-    			t = text(ctx.value);
-    			attr_dev(button, "class", button_class_value = "v" + ctx.value + " f" + ctx.flag + " svelte-on8nsc");
+    			attr_dev(button, "class", button_class_value = "" + null_to_empty((ctx.flag !== FLAG ? '' : ctx.value === MINE ? 'valid' : 'invalid')) + " svelte-unoqk2");
+    			attr_dev(button, "data-value", button_data_value_value = ctx.flag || ctx.value);
     			button.disabled = true;
-    			add_location(button, file$1, 93, 2, 3933);
+    			add_location(button, file$1, 106, 2, 4355);
     		},
 
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
-    			append_dev(button, t);
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.value) {
-    				set_data_dev(t, ctx.value);
+    			if ((changed.flag || changed.value) && button_class_value !== (button_class_value = "" + null_to_empty((ctx.flag !== FLAG ? '' : ctx.value === MINE ? 'valid' : 'invalid')) + " svelte-unoqk2")) {
+    				attr_dev(button, "class", button_class_value);
     			}
 
-    			if ((changed.value || changed.flag) && button_class_value !== (button_class_value = "v" + ctx.value + " f" + ctx.flag + " svelte-on8nsc")) {
-    				attr_dev(button, "class", button_class_value);
+    			if ((changed.flag || changed.value) && button_data_value_value !== (button_data_value_value = ctx.flag || ctx.value)) {
+    				attr_dev(button, "data-value", button_data_value_value);
     			}
     		},
 
@@ -754,20 +756,20 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_else_block$1.name, type: "else", source: "(93:0) {:else}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_else_block$1.name, type: "else", source: "(106:0) {:else}", ctx });
     	return block;
     }
 
-    // (91:0) {#if value === false}
+    // (104:0) {#if value === false}
     function create_if_block$1(ctx) {
-    	var button, t, button_class_value, dispose;
+    	var button, dispose;
 
     	const block = {
     		c: function create() {
     			button = element("button");
-    			t = text(ctx.flag);
-    			attr_dev(button, "class", button_class_value = "f" + ctx.flag + " svelte-on8nsc");
-    			add_location(button, file$1, 91, 2, 3860);
+    			attr_dev(button, "data-value", ctx.flag);
+    			attr_dev(button, "class", "svelte-unoqk2");
+    			add_location(button, file$1, 104, 2, 4293);
 
     			dispose = [
     				listen_dev(button, "click", ctx.click_handler),
@@ -777,16 +779,11 @@
 
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
-    			append_dev(button, t);
     		},
 
     		p: function update(changed, ctx) {
     			if (changed.flag) {
-    				set_data_dev(t, ctx.flag);
-    			}
-
-    			if ((changed.flag) && button_class_value !== (button_class_value = "f" + ctx.flag + " svelte-on8nsc")) {
-    				attr_dev(button, "class", button_class_value);
+    				attr_dev(button, "data-value", ctx.flag);
     			}
     		},
 
@@ -798,7 +795,7 @@
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$1.name, type: "if", source: "(91:0) {#if value === false}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$1.name, type: "if", source: "(104:0) {#if value === false}", ctx });
     	return block;
     }
 

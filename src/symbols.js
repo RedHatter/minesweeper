@@ -1,5 +1,5 @@
 export const BLANK = ''
-export const MINE = 'm'
+export const MINE = '*'
 export const HIDDEN = false
 export const VISIBLE = true
 export const UNKNOWN = '?'
