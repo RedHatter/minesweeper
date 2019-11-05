@@ -22,8 +22,8 @@
     top: 50%;
     display: block;
     width: 100%;
-    background-position: 5px;
-    background-size: 20px;
+    background-position: center;
+    background-size: 60%;
     background-repeat: no-repeat;
     content: attr(data-value);
     transform: translateY(-50%);
