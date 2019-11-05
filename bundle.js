@@ -399,8 +399,8 @@
     			if (default_slot) default_slot.c();
 
     			button.disabled = ctx.disabled;
-    			attr_dev(button, "class", "svelte-yubck1");
-    			add_location(button, file, 45, 2, 749);
+    			attr_dev(button, "class", "svelte-1ijz73k");
+    			add_location(button, file, 45, 2, 753);
     			dispose = listen_dev(button, "click", ctx.click_handler);
     		},
 
@@ -472,13 +472,13 @@
     			if (default_slot) default_slot.c();
     			attr_dev(input, "type", "checkbox");
     			input.disabled = ctx.disabled;
-    			attr_dev(input, "class", "svelte-yubck1");
-    			add_location(input, file, 39, 4, 640);
+    			attr_dev(input, "class", "svelte-1ijz73k");
+    			add_location(input, file, 39, 4, 644);
 
-    			attr_dev(span, "class", "svelte-yubck1");
-    			add_location(span, file, 40, 4, 694);
-    			attr_dev(label, "class", "svelte-yubck1");
-    			add_location(label, file, 38, 2, 628);
+    			attr_dev(span, "class", "svelte-1ijz73k");
+    			add_location(span, file, 40, 4, 698);
+    			attr_dev(label, "class", "svelte-1ijz73k");
+    			add_location(label, file, 38, 2, 632);
     			dispose = listen_dev(input, "change", ctx.input_change_handler);
     		},
 
@@ -720,7 +720,7 @@
 
     const file$1 = "src/Cell.svelte";
 
-    // (87:0) {:else}
+    // (93:0) {:else}
     function create_else_block$1(ctx) {
     	var button, t, button_class_value;
 
@@ -728,9 +728,9 @@
     		c: function create() {
     			button = element("button");
     			t = text(ctx.value);
-    			attr_dev(button, "class", button_class_value = "v" + ctx.value + " f" + ctx.flag + " svelte-1fsvio8");
+    			attr_dev(button, "class", button_class_value = "v" + ctx.value + " f" + ctx.flag + " svelte-on8nsc");
     			button.disabled = true;
-    			add_location(button, file$1, 87, 2, 3848);
+    			add_location(button, file$1, 93, 2, 3933);
     		},
 
     		m: function mount(target, anchor) {
@@ -743,7 +743,7 @@
     				set_data_dev(t, ctx.value);
     			}
 
-    			if ((changed.value || changed.flag) && button_class_value !== (button_class_value = "v" + ctx.value + " f" + ctx.flag + " svelte-1fsvio8")) {
+    			if ((changed.value || changed.flag) && button_class_value !== (button_class_value = "v" + ctx.value + " f" + ctx.flag + " svelte-on8nsc")) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -754,11 +754,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_else_block$1.name, type: "else", source: "(87:0) {:else}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_else_block$1.name, type: "else", source: "(93:0) {:else}", ctx });
     	return block;
     }
 
-    // (85:0) {#if value === false}
+    // (91:0) {#if value === false}
     function create_if_block$1(ctx) {
     	var button, t, button_class_value, dispose;
 
@@ -766,8 +766,8 @@
     		c: function create() {
     			button = element("button");
     			t = text(ctx.flag);
-    			attr_dev(button, "class", button_class_value = "f" + ctx.flag + " svelte-1fsvio8");
-    			add_location(button, file$1, 85, 2, 3775);
+    			attr_dev(button, "class", button_class_value = "f" + ctx.flag + " svelte-on8nsc");
+    			add_location(button, file$1, 91, 2, 3860);
 
     			dispose = [
     				listen_dev(button, "click", ctx.click_handler),
@@ -785,7 +785,7 @@
     				set_data_dev(t, ctx.flag);
     			}
 
-    			if ((changed.flag) && button_class_value !== (button_class_value = "f" + ctx.flag + " svelte-1fsvio8")) {
+    			if ((changed.flag) && button_class_value !== (button_class_value = "f" + ctx.flag + " svelte-on8nsc")) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -798,7 +798,7 @@
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$1.name, type: "if", source: "(85:0) {#if value === false}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$1.name, type: "if", source: "(91:0) {#if value === false}", ctx });
     	return block;
     }
 
@@ -1214,7 +1214,7 @@
     	return child_ctx;
     }
 
-    // (90:0) <Button type="checkbox" bind:checked={mark}>
+    // (87:0) <Button type="checkbox" bind:checked={mark}>
     function create_default_slot_2(ctx) {
     	var t;
 
@@ -1233,11 +1233,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_2.name, type: "slot", source: "(90:0) <Button type=\"checkbox\" bind:checked={mark}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_2.name, type: "slot", source: "(87:0) <Button type=\"checkbox\" bind:checked={mark}>", ctx });
     	return block;
     }
 
-    // (91:0) <Button on:click={tickSolve}>
+    // (88:0) <Button on:click={tickSolve}>
     function create_default_slot_1(ctx) {
     	var t;
 
@@ -1256,11 +1256,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_1.name, type: "slot", source: "(91:0) <Button on:click={tickSolve}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_1.name, type: "slot", source: "(88:0) <Button on:click={tickSolve}>", ctx });
     	return block;
     }
 
-    // (92:0) <Button type="checkbox" bind:checked={cheat}>
+    // (89:0) <Button type="checkbox" bind:checked={cheat}>
     function create_default_slot(ctx) {
     	var t;
 
@@ -1279,11 +1279,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot.name, type: "slot", source: "(92:0) <Button type=\"checkbox\" bind:checked={cheat}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot.name, type: "slot", source: "(89:0) <Button type=\"checkbox\" bind:checked={cheat}>", ctx });
     	return block;
     }
 
-    // (98:2) {#if cheat}
+    // (95:2) {#if cheat}
     function create_if_block$2(ctx) {
     	var span, t0_value = ctx.Math.round(ctx.probability * 100) + "", t0, t1;
 
@@ -1292,7 +1292,7 @@
     			span = element("span");
     			t0 = text(t0_value);
     			t1 = text("% chance of a mine");
-    			add_location(span, file$2, 98, 4, 2082);
+    			add_location(span, file$2, 95, 4, 2068);
     		},
 
     		m: function mount(target, anchor) {
@@ -1313,11 +1313,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$2.name, type: "if", source: "(98:2) {#if cheat}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$2.name, type: "if", source: "(95:2) {#if cheat}", ctx });
     	return block;
     }
 
-    // (105:6) {#each range(height) as y}
+    // (102:6) {#each range(height) as y}
     function create_each_block_1(ctx) {
     	var current;
 
@@ -1373,11 +1373,11 @@
     			destroy_component(cell, detaching);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block_1.name, type: "each", source: "(105:6) {#each range(height) as y}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block_1.name, type: "each", source: "(102:6) {#each range(height) as y}", ctx });
     	return block;
     }
 
-    // (103:2) {#each range(width) as x}
+    // (100:2) {#each range(width) as x}
     function create_each_block(ctx) {
     	var div, t, current;
 
@@ -1402,8 +1402,8 @@
     			}
 
     			t = space();
-    			attr_dev(div, "class", "row svelte-1ft1t2t");
-    			add_location(div, file$2, 103, 4, 2212);
+    			attr_dev(div, "class", "row svelte-12brb26");
+    			add_location(div, file$2, 100, 4, 2198);
     		},
 
     		m: function mount(target, anchor) {
@@ -1470,7 +1470,7 @@
     			destroy_each(each_blocks, detaching);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(103:2) {#each range(width) as x}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(100:2) {#each range(width) as x}", ctx });
     	return block;
     }
 
@@ -1562,13 +1562,13 @@
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(span0, file$2, 93, 2, 1918);
-    			attr_dev(span1, "class", span1_class_value = "state-" + ctx.state + " svelte-1ft1t2t");
-    			add_location(span1, file$2, 94, 2, 1953);
-    			attr_dev(div0, "class", "info svelte-1ft1t2t");
-    			add_location(div0, file$2, 92, 0, 1897);
-    			attr_dev(div1, "class", "board svelte-1ft1t2t");
-    			add_location(div1, file$2, 101, 0, 2160);
+    			add_location(span0, file$2, 90, 2, 1904);
+    			attr_dev(span1, "class", span1_class_value = "state-" + ctx.state + " svelte-12brb26");
+    			add_location(span1, file$2, 91, 2, 1939);
+    			attr_dev(div0, "class", "info svelte-12brb26");
+    			add_location(div0, file$2, 89, 0, 1883);
+    			attr_dev(div1, "class", "board");
+    			add_location(div1, file$2, 98, 0, 2146);
 
     			dispose = [
     				listen_dev(window, "keydown", ctx.keydown_handler),
@@ -1644,7 +1644,7 @@
     				set_data_dev(t9, t9_value);
     			}
 
-    			if ((!current || changed.state) && span1_class_value !== (span1_class_value = "state-" + ctx.state + " svelte-1ft1t2t")) {
+    			if ((!current || changed.state) && span1_class_value !== (span1_class_value = "state-" + ctx.state + " svelte-12brb26")) {
     				attr_dev(span1, "class", span1_class_value);
     			}
 
@@ -1912,9 +1912,9 @@
 
     const file$3 = "src/App.svelte";
 
-    // (72:0) {:else}
+    // (85:0) {:else}
     function create_else_block$2(ctx) {
-    	var div, h1, t1, input0, t2, input1, t3, input2, t4, t5, current, dispose;
+    	var a, t0, div, h1, t2, input0, t3, input1, t4, input2, t5, t6, current, dispose;
 
     	var button = new Button({
     		props: {
@@ -1930,29 +1930,35 @@
 
     	const block = {
     		c: function create() {
+    			a = element("a");
+    			t0 = space();
     			div = element("div");
     			h1 = element("h1");
     			h1.textContent = "Minesweeper";
-    			t1 = text("\n    Play\n    ");
+    			t2 = text("\n    Play\n    ");
     			input0 = element("input");
-    			t2 = text("\n    by\n    ");
+    			t3 = text("\n    by\n    ");
     			input1 = element("input");
-    			t3 = text("\n    with\n    ");
+    			t4 = text("\n    with\n    ");
     			input2 = element("input");
-    			t4 = text("\n    mines.   \n    ");
+    			t5 = text("\n    mines.   \n    ");
     			button.$$.fragment.c();
-    			t5 = space();
+    			t6 = space();
     			if (if_block) if_block.c();
-    			attr_dev(h1, "class", "svelte-12ggfuv");
-    			add_location(h1, file$3, 73, 4, 1780);
-    			attr_dev(input0, "class", "svelte-12ggfuv");
-    			add_location(input0, file$3, 75, 4, 1814);
-    			attr_dev(input1, "class", "svelte-12ggfuv");
-    			add_location(input1, file$3, 77, 4, 1854);
-    			attr_dev(input2, "class", "svelte-12ggfuv");
-    			add_location(input2, file$3, 79, 4, 1897);
-    			attr_dev(div, "class", "svelte-12ggfuv");
-    			add_location(div, file$3, 72, 2, 1770);
+    			attr_dev(a, "href", "https://github.com/RedHatter/minesweeper");
+    			attr_dev(a, "target", "_blank");
+    			attr_dev(a, "class", "svelte-1ydmx30");
+    			add_location(a, file$3, 85, 2, 1871);
+    			attr_dev(h1, "class", "svelte-1ydmx30");
+    			add_location(h1, file$3, 87, 4, 1953);
+    			attr_dev(input0, "class", "svelte-1ydmx30");
+    			add_location(input0, file$3, 89, 4, 1987);
+    			attr_dev(input1, "class", "svelte-1ydmx30");
+    			add_location(input1, file$3, 91, 4, 2027);
+    			attr_dev(input2, "class", "svelte-1ydmx30");
+    			add_location(input2, file$3, 93, 4, 2070);
+    			attr_dev(div, "class", "svelte-1ydmx30");
+    			add_location(div, file$3, 86, 2, 1943);
 
     			dispose = [
     				listen_dev(input0, "input", ctx.input0_input_handler),
@@ -1962,26 +1968,28 @@
     		},
 
     		m: function mount(target, anchor) {
+    			insert_dev(target, a, anchor);
+    			insert_dev(target, t0, anchor);
     			insert_dev(target, div, anchor);
     			append_dev(div, h1);
-    			append_dev(div, t1);
+    			append_dev(div, t2);
     			append_dev(div, input0);
 
     			set_input_value(input0, ctx.width);
 
-    			append_dev(div, t2);
+    			append_dev(div, t3);
     			append_dev(div, input1);
 
     			set_input_value(input1, ctx.height);
 
-    			append_dev(div, t3);
+    			append_dev(div, t4);
     			append_dev(div, input2);
 
     			set_input_value(input2, ctx.mines);
 
-    			append_dev(div, t4);
-    			mount_component(button, div, null);
     			append_dev(div, t5);
+    			mount_component(button, div, null);
+    			append_dev(div, t6);
     			if (if_block) if_block.m(div, null);
     			current = true;
     		},
@@ -2022,6 +2030,8 @@
 
     		d: function destroy(detaching) {
     			if (detaching) {
+    				detach_dev(a);
+    				detach_dev(t0);
     				detach_dev(div);
     			}
 
@@ -2031,11 +2041,11 @@
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_else_block$2.name, type: "else", source: "(72:0) {:else}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_else_block$2.name, type: "else", source: "(85:0) {:else}", ctx });
     	return block;
     }
 
-    // (67:0) {#if playing}
+    // (80:0) {#if playing}
     function create_if_block$3(ctx) {
     	var div, t, current;
 
@@ -2063,8 +2073,8 @@
     			button.$$.fragment.c();
     			t = space();
     			board.$$.fragment.c();
-    			attr_dev(div, "class", "svelte-12ggfuv");
-    			add_location(div, file$3, 67, 2, 1641);
+    			attr_dev(div, "class", "svelte-1ydmx30");
+    			add_location(div, file$3, 80, 2, 1742);
     		},
 
     		m: function mount(target, anchor) {
@@ -2112,11 +2122,11 @@
     			destroy_component(board);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$3.name, type: "if", source: "(67:0) {#if playing}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$3.name, type: "if", source: "(80:0) {#if playing}", ctx });
     	return block;
     }
 
-    // (82:4) <Button on:click={() => (playing = true)} {disabled}>
+    // (96:4) <Button on:click={() => (playing = true)} {disabled}>
     function create_default_slot_1$1(ctx) {
     	var t;
 
@@ -2135,11 +2145,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_1$1.name, type: "slot", source: "(82:4) <Button on:click={() => (playing = true)} {disabled}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_1$1.name, type: "slot", source: "(96:4) <Button on:click={() => (playing = true)} {disabled}>", ctx });
     	return block;
     }
 
-    // (83:4) {#if disabled}
+    // (97:4) {#if disabled}
     function create_if_block_1(ctx) {
     	var br, t;
 
@@ -2147,7 +2157,7 @@
     		c: function create() {
     			br = element("br");
     			t = text("\n      Too many mines.");
-    			add_location(br, file$3, 83, 6, 2047);
+    			add_location(br, file$3, 97, 6, 2220);
     		},
 
     		m: function mount(target, anchor) {
@@ -2162,11 +2172,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1.name, type: "if", source: "(83:4) {#if disabled}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1.name, type: "if", source: "(97:4) {#if disabled}", ctx });
     	return block;
     }
 
-    // (69:4) <Button on:click={() => (playing = false)}>
+    // (82:4) <Button on:click={() => (playing = false)}>
     function create_default_slot$1(ctx) {
     	var t;
 
@@ -2185,12 +2195,12 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot$1.name, type: "slot", source: "(69:4) <Button on:click={() => (playing = false)}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot$1.name, type: "slot", source: "(82:4) <Button on:click={() => (playing = false)}>", ctx });
     	return block;
     }
 
     function create_fragment$3(ctx) {
-    	var a, t, current_block_type_index, if_block, if_block_anchor, current;
+    	var current_block_type_index, if_block, if_block_anchor, current;
 
     	var if_block_creators = [
     		create_if_block$3,
@@ -2209,14 +2219,8 @@
 
     	const block = {
     		c: function create() {
-    			a = element("a");
-    			t = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			attr_dev(a, "href", "https://github.com/RedHatter/minesweeper");
-    			attr_dev(a, "target", "_blank");
-    			attr_dev(a, "class", "svelte-12ggfuv");
-    			add_location(a, file$3, 64, 0, 1554);
     		},
 
     		l: function claim(nodes) {
@@ -2224,8 +2228,6 @@
     		},
 
     		m: function mount(target, anchor) {
-    			insert_dev(target, a, anchor);
-    			insert_dev(target, t, anchor);
     			if_blocks[current_block_type_index].m(target, anchor);
     			insert_dev(target, if_block_anchor, anchor);
     			current = true;
@@ -2265,11 +2267,6 @@
     		},
 
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_dev(a);
-    				detach_dev(t);
-    			}
-
     			if_blocks[current_block_type_index].d(detaching);
 
     			if (detaching) {
