@@ -11,10 +11,11 @@
     padding: 2px 12px;
     border: 1px solid gray;
     border-radius: 2px;
-    background: none;
+    background: transparent;
     font-size: inherit;
     font-family: inherit;
     cursor: pointer;
+    transition: background-color 0.3s;
   }
 
   button:hover,
