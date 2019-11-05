@@ -16,8 +16,12 @@
   const WON = 'w'
   let state = PLAYING
 
+  let _time = performance.now()
   let time = 0
-  const timer = setInterval(() => time++, 1000)
+  const timer = setInterval(
+    () => (time = Math.floor((performance.now() - _time) / 1000)),
+    1000
+  )
   $: state !== PLAYING && clearInterval(timer)
 
   const board = createBoard(
