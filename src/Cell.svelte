@@ -8,13 +8,19 @@
   button {
     padding: 0;
     width: 30px;
-    height: 30px;
     border: 1px solid lightgrey;
     border-right: none;
     border-bottom: none;
     background-color: rgb(245, 246, 247);
     font-weight: bold;
     cursor: pointer;
+  }
+
+  button::after {
+    display: block;
+    padding-bottom: 100%;
+    width: 100%;
+    content: '';
   }
 
   button:hover {

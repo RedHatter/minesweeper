@@ -60,9 +60,22 @@
   input:focus {
     border-color: gray;
   }
-</style>
 
-<a href="https://github.com/RedHatter/minesweeper" target="_blank" />
+  @media (max-width: 560px) {
+    h1 {
+      font-size: 10vw;
+    }
+
+    div {
+      font-size: 5vw;
+    }
+
+    input {
+      width: 10vw;
+      font-size: 8vw;
+    }
+  }
+</style>
 
 {#if playing}
   <div>
@@ -70,6 +83,7 @@
     <Board {width} {height} {mines} />
   </div>
 {:else}
+  <a href="https://github.com/RedHatter/minesweeper" target="_blank" />
   <div>
     <h1>Minesweeper</h1>
     Play

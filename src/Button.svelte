@@ -7,7 +7,7 @@
 <style>
   label span,
   button {
-    margin: 5px;
+    margin-top: 2px;
     padding: 2px 12px;
     border: 1px solid gray;
     border-radius: 2px;

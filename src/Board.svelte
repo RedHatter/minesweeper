@@ -56,13 +56,10 @@
   .info {
     display: flex;
     justify-content: space-evenly;
-    margin: 0 auto;
+    margin: 10px auto;
+    max-width: 100%;
     width: 500px;
     font-size: 1rem;
-  }
-
-  .board {
-    margin-top: 12px;
   }
 
   .row {
