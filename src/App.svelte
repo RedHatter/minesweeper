@@ -99,7 +99,13 @@
 
 {#if playing}
   <div>
-    <Button on:click={() => (playing = false)}>New game</Button>
+    <Button
+      on:click={() => {
+        playing = false
+        seed = rand.nextString(16)
+      }}>
+      New game
+    </Button>
     <Board {width} {height} {mines} {seed} />
   </div>
 {:else}
