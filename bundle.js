@@ -2503,7 +2503,7 @@
 
   const file$3 = 'src/App.svelte'
 
-  // (103:0) {:else}
+  // (111:0) {:else}
   function create_else_block$2(ctx) {
     var a,
       t0,
@@ -2573,24 +2573,24 @@
         if (if_block) if_block.c()
         attr_dev(a, 'href', 'https://github.com/RedHatter/minesweeper')
         attr_dev(a, 'target', '_blank')
-        attr_dev(a, 'class', 'svelte-o2hciz')
-        add_location(a, file$3, 103, 2, 2206)
-        attr_dev(h1, 'class', 'svelte-o2hciz')
-        add_location(h1, file$3, 105, 4, 2324)
+        attr_dev(a, 'class', 'svelte-xjel57')
+        add_location(a, file$3, 111, 2, 2281)
+        attr_dev(h1, 'class', 'svelte-xjel57')
+        add_location(h1, file$3, 113, 4, 2399)
         attr_dev(input0, 'type', 'number')
-        attr_dev(input0, 'class', 'svelte-o2hciz')
-        add_location(input0, file$3, 107, 4, 2358)
+        attr_dev(input0, 'class', 'svelte-xjel57')
+        add_location(input0, file$3, 115, 4, 2433)
         attr_dev(input1, 'type', 'number')
-        attr_dev(input1, 'class', 'svelte-o2hciz')
-        add_location(input1, file$3, 109, 4, 2412)
+        attr_dev(input1, 'class', 'svelte-xjel57')
+        add_location(input1, file$3, 117, 4, 2487)
         attr_dev(input2, 'type', 'number')
-        attr_dev(input2, 'class', 'svelte-o2hciz')
-        add_location(input2, file$3, 111, 4, 2469)
+        attr_dev(input2, 'class', 'svelte-xjel57')
+        add_location(input2, file$3, 119, 4, 2544)
         attr_dev(input3, 'type', 'text')
-        attr_dev(input3, 'class', 'svelte-o2hciz')
-        add_location(input3, file$3, 113, 4, 2540)
-        attr_dev(form, 'class', 'svelte-o2hciz')
-        add_location(form, file$3, 104, 2, 2278)
+        attr_dev(input3, 'class', 'svelte-xjel57')
+        add_location(input3, file$3, 121, 4, 2615)
+        attr_dev(form, 'class', 'svelte-xjel57')
+        add_location(form, file$3, 112, 2, 2353)
 
         dispose = [
           listen_dev(input0, 'input', input0_input_handler),
@@ -2692,13 +2692,13 @@
       block,
       id: create_else_block$2.name,
       type: 'else',
-      source: '(103:0) {:else}',
+      source: '(111:0) {:else}',
       ctx
     })
     return block
   }
 
-  // (98:0) {#if playing}
+  // (100:0) {#if playing}
   function create_if_block$3(ctx) {
     var div, t, current
 
@@ -2727,8 +2727,8 @@
         button.$$.fragment.c()
         t = space()
         board.$$.fragment.c()
-        attr_dev(div, 'class', 'svelte-o2hciz')
-        add_location(div, file$3, 98, 2, 2070)
+        attr_dev(div, 'class', 'svelte-xjel57')
+        add_location(div, file$3, 100, 2, 2076)
       },
 
       m: function mount(target, anchor) {
@@ -2781,13 +2781,13 @@
       block,
       id: create_if_block$3.name,
       type: 'if',
-      source: '(98:0) {#if playing}',
+      source: '(100:0) {#if playing}',
       ctx
     })
     return block
   }
 
-  // (116:4) <Button type="submit" {disabled}>
+  // (124:4) <Button type="submit" {disabled}>
   function create_default_slot_1$1(ctx) {
     var t
 
@@ -2810,13 +2810,13 @@
       block,
       id: create_default_slot_1$1.name,
       type: 'slot',
-      source: '(116:4) <Button type="submit" {disabled}>',
+      source: '(124:4) <Button type="submit" {disabled}>',
       ctx
     })
     return block
   }
 
-  // (117:4) {#if disabled}
+  // (125:4) {#if disabled}
   function create_if_block_1$1(ctx) {
     var br, t
 
@@ -2824,7 +2824,7 @@
       c: function create() {
         br = element('br')
         t = text('\n      Too many mines.')
-        add_location(br, file$3, 117, 6, 2674)
+        add_location(br, file$3, 125, 6, 2749)
       },
 
       m: function mount(target, anchor) {
@@ -2843,13 +2843,13 @@
       block,
       id: create_if_block_1$1.name,
       type: 'if',
-      source: '(117:4) {#if disabled}',
+      source: '(125:4) {#if disabled}',
       ctx
     })
     return block
   }
 
-  // (100:4) <Button on:click={() => (playing = false)}>
+  // (102:4) <Button       on:click={() => {         playing = false         seed = rand.nextString(16)       }}>
   function create_default_slot$1(ctx) {
     var t
 
@@ -2872,7 +2872,8 @@
       block,
       id: create_default_slot$1.name,
       type: 'slot',
-      source: '(100:4) <Button on:click={() => (playing = false)}>',
+      source:
+        '(102:4) <Button       on:click={() => {         playing = false         seed = rand.nextString(16)       }}>',
       ctx
     })
     return block
@@ -2975,7 +2976,10 @@
     let rand = new Prando()
     let seed = rand.nextString(16)
 
-    const click_handler = () => $$invalidate('playing', (playing = false))
+    const click_handler = () => {
+      $$invalidate('playing', (playing = false))
+      $$invalidate('seed', (seed = rand.nextString(16)))
+    }
 
     function input0_input_handler() {
       width = to_number(this.value)
@@ -3009,7 +3013,7 @@
       if ('mines' in $$props) $$invalidate('mines', (mines = $$props.mines))
       if ('playing' in $$props)
         $$invalidate('playing', (playing = $$props.playing))
-      if ('rand' in $$props) rand = $$props.rand
+      if ('rand' in $$props) $$invalidate('rand', (rand = $$props.rand))
       if ('seed' in $$props) $$invalidate('seed', (seed = $$props.seed))
       if ('disabled' in $$props)
         $$invalidate('disabled', (disabled = $$props.disabled))
@@ -3028,6 +3032,7 @@
       height,
       mines,
       playing,
+      rand,
       seed,
       disabled,
       click_handler,
