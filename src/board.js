@@ -4,7 +4,6 @@ import {
   HIDDEN,
   VISIBLE,
   UNKNOWN,
-  ADJACENT,
   FLAG,
   LOST
 } from './symbols.js'

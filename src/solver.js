@@ -5,7 +5,7 @@ import {
   HIDDEN,
   VISIBLE,
   UNKNOWN,
-  ADJACENT,
+  SAFE,
   FLAG
 } from './symbols.js'
 
@@ -36,11 +36,16 @@ function getProbabilityList(board) {
 
   // blank base solution
   let solutionList = [Array(size).fill(UNKNOWN)]
+  solutionList[0].mines = board.mines // remaining mines to place
+  let squares = board.size // number of possible mine locations
 
   // calculate all possible mine positions
   for (let i = 0; i < size; i++) {
     const n = board.get(i)
-    if (n === HIDDEN || n === BLANK) continue // only fork for squares adjacent to mines
+    if (n === HIDDEN || n === BLANK) {
+      squares--
+      continue // only fork for squares adjacent to mines
+    }
 
     // find possible mine locations
     const adjacent = board.getAdjacent(i).filter(i => board.get(i) === HIDDEN)
@@ -48,34 +53,37 @@ function getProbabilityList(board) {
     if (!adjacent.length) continue
 
     const _solutionList = []
+    let _squares
     for (const solution of solutionList) {
-      for (const i of adjacent) if (solution[i] !== MINE) solution[i] = ADJACENT
+      _squares = squares
+      l: for (const o of combinations(n, adjacent)) {
+        const forked = JSON.parse(JSON.stringify(solution))
+        forked.mines = solution.mines
 
-      // place n mines in all possible permutations
-      _solutionList.push(
-        ...combinations(n, adjacent)
-          .map(o => {
-            const forked = JSON.parse(JSON.stringify(solution))
-            for (const i of o) forked[i] = MINE
-            return forked
-          })
-          .filter(validate) // remove illegal solutions
-      )
+        for (const i of o) {
+          if (forked[i] == SAFE) continue l
+          forked[i] = MINE
+          forked.mines--
+          squares--
+        }
+
+        for (const i of adjacent) {
+          if (o.includes(i)) continue
+          if (forked[i] === MINE) continue l
+
+          forked[i] = SAFE
+          squares--
+        }
+
+        _solutionList.push(forked)
+      }
     }
 
     solutionList = _solutionList
+    squares = _squares
   }
 
-  for (const solution of solutionList) {
-    let mines = board.mines
-    let squares = 0
-    for (let i = 0; i < size; i++)
-      if (solution[i] === MINE) mines--
-      else if (solution[i] !== ADJACENT) squares++
-
-    solution.base = mines / squares
-  }
-
+  // fold list of solutions into probabilities
   const probabilityList = []
   for (let i = 0; i < size; i++) {
     const n = board.get(i)
@@ -83,7 +91,9 @@ function getProbabilityList(board) {
       probabilityList.push(VISIBLE)
     } else if (solutionList[0][i] === UNKNOWN) {
       let total = 0
-      for (const solution of solutionList) total += solution.base
+      for (const solution of solutionList)
+        total += solution.mines / squares
+
       probabilityList.push(total / solutionList.length)
     } else {
       let weight = 0
@@ -91,22 +101,6 @@ function getProbabilityList(board) {
 
       probabilityList.push(weight / solutionList.length)
     }
-  }
-
-  function validate(solution) {
-    for (let i = 0; i < size; i++) {
-      // only check squares adjacent to mines
-      let n = board.get(i)
-      if (n === HIDDEN || n === BLANK) continue
-
-      // count mines
-      for (const a of board.getAdjacent(i)) if (solution[a] === MINE) n--
-
-      // too many mines
-      if (n < 0) return false
-    }
-
-    return true
   }
 
   return probabilityList
