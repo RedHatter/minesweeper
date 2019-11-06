@@ -1211,7 +1211,7 @@
     	return child_ctx;
     }
 
-    // (87:0) <Button type="checkbox" bind:checked={mark}>
+    // (99:0) <Button type="checkbox" bind:checked={mark}>
     function create_default_slot_2(ctx) {
     	var t;
 
@@ -1230,11 +1230,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_2.name, type: "slot", source: "(87:0) <Button type=\"checkbox\" bind:checked={mark}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_2.name, type: "slot", source: "(99:0) <Button type=\"checkbox\" bind:checked={mark}>", ctx });
     	return block;
     }
 
-    // (88:0) <Button on:click={tickSolve}>
+    // (100:0) <Button on:click={tickSolve}>
     function create_default_slot_1(ctx) {
     	var t;
 
@@ -1253,11 +1253,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_1.name, type: "slot", source: "(88:0) <Button on:click={tickSolve}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot_1.name, type: "slot", source: "(100:0) <Button on:click={tickSolve}>", ctx });
     	return block;
     }
 
-    // (89:0) <Button type="checkbox" bind:checked={cheat}>
+    // (101:0) <Button type="checkbox" bind:checked={cheat}>
     function create_default_slot(ctx) {
     	var t;
 
@@ -1276,12 +1276,12 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot.name, type: "slot", source: "(89:0) <Button type=\"checkbox\" bind:checked={cheat}>", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_default_slot.name, type: "slot", source: "(101:0) <Button type=\"checkbox\" bind:checked={cheat}>", ctx });
     	return block;
     }
 
-    // (95:2) {#if cheat}
-    function create_if_block$2(ctx) {
+    // (107:2) {#if cheat}
+    function create_if_block_1(ctx) {
     	var span, t0_value = ctx.Math.round(ctx.probability * 100) + "", t0, t1;
 
     	const block = {
@@ -1289,7 +1289,7 @@
     			span = element("span");
     			t0 = text(t0_value);
     			t1 = text("% chance of a mine");
-    			add_location(span, file$2, 95, 4, 2068);
+    			add_location(span, file$2, 107, 4, 2338);
     		},
 
     		m: function mount(target, anchor) {
@@ -1310,11 +1310,11 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$2.name, type: "if", source: "(95:2) {#if cheat}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1.name, type: "if", source: "(107:2) {#if cheat}", ctx });
     	return block;
     }
 
-    // (102:6) {#each range(height) as y}
+    // (114:6) {#each range(height) as y}
     function create_each_block_1(ctx) {
     	var current;
 
@@ -1370,11 +1370,11 @@
     			destroy_component(cell, detaching);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block_1.name, type: "each", source: "(102:6) {#each range(height) as y}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block_1.name, type: "each", source: "(114:6) {#each range(height) as y}", ctx });
     	return block;
     }
 
-    // (100:2) {#each range(width) as x}
+    // (112:2) {#each range(width) as x}
     function create_each_block(ctx) {
     	var div, t, current;
 
@@ -1400,7 +1400,7 @@
 
     			t = space();
     			attr_dev(div, "class", "row svelte-12brb26");
-    			add_location(div, file$2, 100, 4, 2198);
+    			add_location(div, file$2, 112, 4, 2468);
     		},
 
     		m: function mount(target, anchor) {
@@ -1467,12 +1467,54 @@
     			destroy_each(each_blocks, detaching);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(100:2) {#each range(width) as x}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(112:2) {#each range(width) as x}", ctx });
+    	return block;
+    }
+
+    // (124:0) {#if solveTime.count > 0}
+    function create_if_block$2(ctx) {
+    	var t0, t1_value = ctx.Math.round(ctx.solveTime.total/ctx.solveTime.count) + "", t1, t2, t3_value = ctx.Math.round(ctx.solveTime.max) + "", t3;
+
+    	const block = {
+    		c: function create() {
+    			t0 = text("Avg: ");
+    			t1 = text(t1_value);
+    			t2 = text(", Max: ");
+    			t3 = text(t3_value);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, t2, anchor);
+    			insert_dev(target, t3, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.solveTime) && t1_value !== (t1_value = ctx.Math.round(ctx.solveTime.total/ctx.solveTime.count) + "")) {
+    				set_data_dev(t1, t1_value);
+    			}
+
+    			if ((changed.solveTime) && t3_value !== (t3_value = ctx.Math.round(ctx.solveTime.max) + "")) {
+    				set_data_dev(t3, t3_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach_dev(t0);
+    				detach_dev(t1);
+    				detach_dev(t2);
+    				detach_dev(t3);
+    			}
+    		}
+    	};
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$2.name, type: "if", source: "(124:0) {#if solveTime.count > 0}", ctx });
     	return block;
     }
 
     function create_fragment$2(ctx) {
-    	var updating_checked, t0, t1, updating_checked_1, t2, div0, span0, t3, t4, t5, t6, span1, t7_value = ctx.Math.floor(ctx.time / 60) + "", t7, t8, t9_value = (ctx.time % 60).toString().padStart(2, '0') + "", t9, span1_class_value, t10, t11, div1, current, dispose;
+    	var updating_checked, t0, t1, updating_checked_1, t2, div0, span0, t3, t4, t5, t6, span1, t7_value = ctx.Math.floor(ctx.time / 60) + "", t7, t8, t9_value = (ctx.time % 60).toString().padStart(2, '0') + "", t9, span1_class_value, t10, t11, div1, t12, if_block1_anchor, current, dispose;
 
     	function button0_checked_binding(value) {
     		ctx.button0_checked_binding.call(null, value);
@@ -1519,7 +1561,7 @@
 
     	binding_callbacks.push(() => bind(button2, 'checked', button2_checked_binding));
 
-    	var if_block = (ctx.cheat) && create_if_block$2(ctx);
+    	var if_block0 = (ctx.cheat) && create_if_block_1(ctx);
 
     	let each_value = range(ctx.width);
 
@@ -1532,6 +1574,8 @@
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
     		each_blocks[i] = null;
     	});
+
+    	var if_block1 = (ctx.solveTime.count > 0) && create_if_block$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -1552,20 +1596,24 @@
     			t8 = text(" : ");
     			t9 = text(t9_value);
     			t10 = space();
-    			if (if_block) if_block.c();
+    			if (if_block0) if_block0.c();
     			t11 = space();
     			div1 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(span0, file$2, 90, 2, 1904);
+
+    			t12 = space();
+    			if (if_block1) if_block1.c();
+    			if_block1_anchor = empty();
+    			add_location(span0, file$2, 102, 2, 2174);
     			attr_dev(span1, "class", span1_class_value = "state-" + ctx.state + " svelte-12brb26");
-    			add_location(span1, file$2, 91, 2, 1939);
+    			add_location(span1, file$2, 103, 2, 2209);
     			attr_dev(div0, "class", "info svelte-12brb26");
-    			add_location(div0, file$2, 89, 0, 1883);
+    			add_location(div0, file$2, 101, 0, 2153);
     			attr_dev(div1, "class", "board");
-    			add_location(div1, file$2, 98, 0, 2146);
+    			add_location(div1, file$2, 110, 0, 2416);
 
     			dispose = [
     				listen_dev(window, "keydown", ctx.keydown_handler),
@@ -1595,7 +1643,7 @@
     			append_dev(span1, t8);
     			append_dev(span1, t9);
     			append_dev(div0, t10);
-    			if (if_block) if_block.m(div0, null);
+    			if (if_block0) if_block0.m(div0, null);
     			insert_dev(target, t11, anchor);
     			insert_dev(target, div1, anchor);
 
@@ -1603,6 +1651,9 @@
     				each_blocks[i].m(div1, null);
     			}
 
+    			insert_dev(target, t12, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, if_block1_anchor, anchor);
     			current = true;
     		},
 
@@ -1646,16 +1697,16 @@
     			}
 
     			if (ctx.cheat) {
-    				if (if_block) {
-    					if_block.p(changed, ctx);
+    				if (if_block0) {
+    					if_block0.p(changed, ctx);
     				} else {
-    					if_block = create_if_block$2(ctx);
-    					if_block.c();
-    					if_block.m(div0, null);
+    					if_block0 = create_if_block_1(ctx);
+    					if_block0.c();
+    					if_block0.m(div0, null);
     				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
     			}
 
     			if (changed.range || changed.height || changed.board || changed.width) {
@@ -1681,6 +1732,19 @@
     					out(i);
     				}
     				check_outros();
+    			}
+
+    			if (ctx.solveTime.count > 0) {
+    				if (if_block1) {
+    					if_block1.p(changed, ctx);
+    				} else {
+    					if_block1 = create_if_block$2(ctx);
+    					if_block1.c();
+    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
     			}
     		},
 
@@ -1732,7 +1796,7 @@
     				detach_dev(div0);
     			}
 
-    			if (if_block) if_block.d();
+    			if (if_block0) if_block0.d();
 
     			if (detaching) {
     				detach_dev(t11);
@@ -1740,6 +1804,16 @@
     			}
 
     			destroy_each(each_blocks, detaching);
+
+    			if (detaching) {
+    				detach_dev(t12);
+    			}
+
+    			if (if_block1) if_block1.d(detaching);
+
+    			if (detaching) {
+    				detach_dev(if_block1_anchor);
+    			}
 
     			run_all(dispose);
     		}
@@ -1785,11 +1859,23 @@
         $$invalidate('board', board);
       }
 
+      let solveTime = {
+        count: 0,
+        total: 0,
+        max: 0
+      };
       function tickSolve() {
+        const t0 = performance.now();
         const _marked = solve(board);
+        const t1 = performance.now();
+        const delta = t1 - t0;
+        $$invalidate('solveTime', solveTime.count++, solveTime);
+        $$invalidate('solveTime', solveTime.total += delta, solveTime);
+        if (delta > solveTime.max) $$invalidate('solveTime', solveTime.max = delta, solveTime);
+
         if (_marked > 0) $$invalidate('marked', marked = _marked);
         $$invalidate('board', board);
-        if (state === PLAYING) setTimeout(tickSolve, 200);
+        if (state === PLAYING) setTimeout(tickSolve, 200 - delta);
       }
 
       let hover = { x: 0, y: 0 };
@@ -1825,7 +1911,7 @@
     	};
 
     	$$self.$capture_state = () => {
-    		return { width, height, mines, mark, state, _time, time, marked, hover, cheat, probability };
+    		return { width, height, mines, mark, state, _time, time, marked, solveTime, hover, cheat, probability };
     	};
 
     	$$self.$inject_state = $$props => {
@@ -1837,6 +1923,7 @@
     		if ('_time' in $$props) _time = $$props._time;
     		if ('time' in $$props) $$invalidate('time', time = $$props.time);
     		if ('marked' in $$props) $$invalidate('marked', marked = $$props.marked);
+    		if ('solveTime' in $$props) $$invalidate('solveTime', solveTime = $$props.solveTime);
     		if ('hover' in $$props) $$invalidate('hover', hover = $$props.hover);
     		if ('cheat' in $$props) $$invalidate('cheat', cheat = $$props.cheat);
     		if ('probability' in $$props) $$invalidate('probability', probability = $$props.probability);
@@ -1859,6 +1946,7 @@
     		board,
     		marked,
     		handleClick,
+    		solveTime,
     		tickSolve,
     		hover,
     		cheat,
@@ -1923,7 +2011,7 @@
     	});
     	button.$on("click", ctx.click_handler_1);
 
-    	var if_block = (ctx.disabled) && create_if_block_1(ctx);
+    	var if_block = (ctx.disabled) && create_if_block_1$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -2003,7 +2091,7 @@
 
     			if (ctx.disabled) {
     				if (!if_block) {
-    					if_block = create_if_block_1(ctx);
+    					if_block = create_if_block_1$1(ctx);
     					if_block.c();
     					if_block.m(div, null);
     				}
@@ -2147,7 +2235,7 @@
     }
 
     // (97:4) {#if disabled}
-    function create_if_block_1(ctx) {
+    function create_if_block_1$1(ctx) {
     	var br, t;
 
     	const block = {
@@ -2169,7 +2257,7 @@
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1.name, type: "if", source: "(97:4) {#if disabled}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1$1.name, type: "if", source: "(97:4) {#if disabled}", ctx });
     	return block;
     }
 

@@ -40,11 +40,23 @@
     board = board
   }
 
+  let solveTime = {
+    count: 0,
+    total: 0,
+    max: 0
+  }
   function tickSolve() {
+    const t0 = performance.now()
     const _marked = solve(board)
+    const t1 = performance.now()
+    const delta = t1 - t0
+    solveTime.count++
+    solveTime.total += delta
+    if (delta > solveTime.max) solveTime.max = delta
+
     if (_marked > 0) marked = _marked
     board = board
-    if (state === PLAYING) setTimeout(tickSolve, 200)
+    if (state === PLAYING) setTimeout(tickSolve, 200 - delta)
   }
 
   let hover = { x: 0, y: 0 }
@@ -109,3 +121,6 @@
     </div>
   {/each}
 </div>
+{#if solveTime.count > 0}
+  Avg: {Math.round(solveTime.total/solveTime.count)}, Max: {Math.round(solveTime.max)}
+{/if}
