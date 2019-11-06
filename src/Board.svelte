@@ -5,6 +5,7 @@
   import { solve, getProbability } from './solver.js'
   import { range } from './util.js'
 
+  export let seed
   export let width = 10
   export let height = 10
   export let mines = 10
@@ -25,6 +26,7 @@
   $: state !== PLAYING && clearInterval(timer)
 
   const board = createBoard(
+    seed,
     width,
     height,
     mines,

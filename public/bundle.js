@@ -407,6 +407,197 @@
     }
   }
 
+  var Prando = /** @class */ (function() {
+    // ================================================================================================================
+    // CONSTRUCTOR ----------------------------------------------------------------------------------------------------
+    /**
+     * Generate a new Prando pseudo-random number generator.
+     *
+     * @param seed - A number or string seed that determines which pseudo-random number sequence will be created. Defaults to current time.
+     */
+    function Prando(seed) {
+      this._value = NaN
+      if (typeof seed === 'string') {
+        // String seed
+        this._seed = this.hashCode(seed)
+      } else if (typeof seed === 'number') {
+        // Numeric seed
+        this._seed = this.getSafeSeed(seed)
+      } else {
+        // Pseudo-random seed
+        this._seed = this.getSafeSeed(
+          Prando.MIN + Math.floor((Prando.MAX - Prando.MIN) * Math.random())
+        )
+      }
+      this.reset()
+    }
+    // ================================================================================================================
+    // PUBLIC INTERFACE -----------------------------------------------------------------------------------------------
+    /**
+     * Generates a pseudo-random number between a lower (inclusive) and a higher (exclusive) bounds.
+     *
+     * @param min - The minimum number that can be randomly generated.
+     * @param pseudoMax - The maximum number that can be randomly generated (exclusive).
+     * @return The generated pseudo-random number.
+     */
+    Prando.prototype.next = function(min, pseudoMax) {
+      if (min === void 0) {
+        min = 0
+      }
+      if (pseudoMax === void 0) {
+        pseudoMax = 1
+      }
+      this.recalculate()
+      return this.map(this._value, Prando.MIN, Prando.MAX, min, pseudoMax)
+    }
+    /**
+     * Generates a pseudo-random integer number in a range (inclusive).
+     *
+     * @param min - The minimum number that can be randomly generated.
+     * @param max - The maximum number that can be randomly generated.
+     * @return The generated pseudo-random number.
+     */
+    Prando.prototype.nextInt = function(min, max) {
+      if (min === void 0) {
+        min = 10
+      }
+      if (max === void 0) {
+        max = 100
+      }
+      this.recalculate()
+      return Math.floor(
+        this.map(this._value, Prando.MIN, Prando.MAX, min, max + 1)
+      )
+    }
+    /**
+     * Generates a pseudo-random string sequence of a particular length from a specific character range.
+     *
+     * Note: keep in mind that creating a random string sequence does not guarantee uniqueness; there is always a
+     * 1 in (char_length^string_length) chance of collision. For real unique string ids, always check for
+     * pre-existing ids, or employ a robust GUID/UUID generator.
+     *
+     * @param length - Length of the strting to be generated.
+     * @param chars - Characters that are used when creating the random string. Defaults to all alphanumeric chars (A-Z, a-z, 0-9).
+     * @return The generated string sequence.
+     */
+    Prando.prototype.nextString = function(length, chars) {
+      if (length === void 0) {
+        length = 16
+      }
+      if (chars === void 0) {
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+      }
+      var str = ''
+      while (str.length < length) {
+        str += this.nextChar(chars)
+      }
+      return str
+    }
+    /**
+     * Generates a pseudo-random string of 1 character specific character range.
+     *
+     * @param chars - Characters that are used when creating the random string. Defaults to all alphanumeric chars (A-Z, a-z, 0-9).
+     * @return The generated character.
+     */
+    Prando.prototype.nextChar = function(chars) {
+      if (chars === void 0) {
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+      }
+      this.recalculate()
+      return chars.substr(this.nextInt(0, chars.length - 1), 1)
+    }
+    /**
+     * Picks a pseudo-random item from an array. The array is left unmodified.
+     *
+     * Note: keep in mind that while the returned item will be random enough, picking one item from the array at a time
+     * does not guarantee nor imply that a sequence of random non-repeating items will be picked. If you want to
+     * *pick items in a random order* from an array, instead of *pick one random item from an array*, it's best to
+     * apply a *shuffle* transformation to the array instead, then read it linearly.
+     *
+     * @param array - Array of any type containing one or more candidates for random picking.
+     * @return An item from the array.
+     */
+    Prando.prototype.nextArrayItem = function(array) {
+      this.recalculate()
+      return array[this.nextInt(0, array.length - 1)]
+    }
+    /**
+     * Generates a pseudo-random boolean.
+     *
+     * @return A value of true or false.
+     */
+    Prando.prototype.nextBoolean = function() {
+      this.recalculate()
+      return this._value > 0.5
+    }
+    /**
+     * Skips ahead in the sequence of numbers that are being generated. This is equivalent to
+     * calling next() a specified number of times, but faster since it doesn't need to map the
+     * new random numbers to a range and return it.
+     *
+     * @param iterations - The number of items to skip ahead.
+     */
+    Prando.prototype.skip = function(iterations) {
+      if (iterations === void 0) {
+        iterations = 1
+      }
+      while (iterations-- > 0) {
+        this.recalculate()
+      }
+    }
+    /**
+     * Reset the pseudo-random number sequence back to its starting seed. Further calls to next()
+     * will then produce the same sequence of numbers it had produced before. This is equivalent to
+     * creating a new Prando instance with the same seed as another Prando instance.
+     *
+     * Example:
+     * let rng = new Prando(12345678);
+     * console.log(rng.next()); // 0.6177754114889017
+     * console.log(rng.next()); // 0.5784605181725837
+     * rng.reset();
+     * console.log(rng.next()); // 0.6177754114889017 again
+     * console.log(rng.next()); // 0.5784605181725837 again
+     */
+    Prando.prototype.reset = function() {
+      this._value = this._seed
+    }
+    // ================================================================================================================
+    // PRIVATE INTERFACE ----------------------------------------------------------------------------------------------
+    Prando.prototype.recalculate = function() {
+      this._value = this.xorshift(this._value)
+    }
+    Prando.prototype.xorshift = function(value) {
+      // Xorshift*32
+      // Based on George Marsaglia's work: http://www.jstatsoft.org/v08/i14/paper
+      value ^= value << 13
+      value ^= value >> 17
+      value ^= value << 5
+      return value
+    }
+    Prando.prototype.map = function(val, minFrom, maxFrom, minTo, maxTo) {
+      return ((val - minFrom) / (maxFrom - minFrom)) * (maxTo - minTo) + minTo
+    }
+    Prando.prototype.hashCode = function(str) {
+      var hash = 0
+      if (str) {
+        var l = str.length
+        for (var i = 0; i < l; i++) {
+          hash = (hash << 5) - hash + str.charCodeAt(i)
+          hash |= 0
+          hash = this.xorshift(hash)
+        }
+      }
+      return this.getSafeSeed(hash)
+    }
+    Prando.prototype.getSafeSeed = function(seed) {
+      if (seed === 0) return 1
+      return seed
+    }
+    Prando.MIN = -2147483648 // Int32 min
+    Prando.MAX = 2147483647 // Int32 max
+    return Prando
+  })()
+
   /* src/Button.svelte generated by Svelte v3.12.1 */
 
   const file = 'src/Button.svelte'
@@ -1067,7 +1258,9 @@
     }
   }
 
-  function createBoard(width, height, mines, onWin, onLose) {
+  function createBoard(seed, width, height, mines, onWin, onLose) {
+    const rand = new Prando(seed)
+
     const size = width * height
     const board = Array(size).fill(BLANK)
     const flags = Array(size).fill(BLANK)
@@ -1160,7 +1353,7 @@
 
     // place mines
     for (let i = 0; i < mines; i++) {
-      const square = Math.floor(Math.random() * size)
+      const square = rand.nextInt(0, size)
       if (board[square] === MINE) {
         i-- // try again
         continue
@@ -1325,7 +1518,7 @@
     return child_ctx
   }
 
-  // (101:0) <Button type="checkbox" bind:checked={mark}>
+  // (103:0) <Button type="checkbox" bind:checked={mark}>
   function create_default_slot_2(ctx) {
     var t
 
@@ -1348,13 +1541,13 @@
       block,
       id: create_default_slot_2.name,
       type: 'slot',
-      source: '(101:0) <Button type="checkbox" bind:checked={mark}>',
+      source: '(103:0) <Button type="checkbox" bind:checked={mark}>',
       ctx
     })
     return block
   }
 
-  // (102:0) <Button on:click={tickSolve}>
+  // (104:0) <Button on:click={tickSolve}>
   function create_default_slot_1(ctx) {
     var t
 
@@ -1377,13 +1570,13 @@
       block,
       id: create_default_slot_1.name,
       type: 'slot',
-      source: '(102:0) <Button on:click={tickSolve}>',
+      source: '(104:0) <Button on:click={tickSolve}>',
       ctx
     })
     return block
   }
 
-  // (103:0) <Button type="checkbox" bind:checked={cheat}>
+  // (105:0) <Button type="checkbox" bind:checked={cheat}>
   function create_default_slot(ctx) {
     var t
 
@@ -1406,13 +1599,13 @@
       block,
       id: create_default_slot.name,
       type: 'slot',
-      source: '(103:0) <Button type="checkbox" bind:checked={cheat}>',
+      source: '(105:0) <Button type="checkbox" bind:checked={cheat}>',
       ctx
     })
     return block
   }
 
-  // (109:2) {#if cheat}
+  // (111:2) {#if cheat}
   function create_if_block_1(ctx) {
     var span,
       t0_value = ctx.Math.round(ctx.probability * 100) + '',
@@ -1424,7 +1617,7 @@
         span = element('span')
         t0 = text(t0_value)
         t1 = text('% chance of a mine')
-        add_location(span, file$2, 109, 4, 2284)
+        add_location(span, file$2, 111, 4, 2312)
       },
 
       m: function mount(target, anchor) {
@@ -1452,13 +1645,13 @@
       block,
       id: create_if_block_1.name,
       type: 'if',
-      source: '(109:2) {#if cheat}',
+      source: '(111:2) {#if cheat}',
       ctx
     })
     return block
   }
 
-  // (116:6) {#each range(width) as x}
+  // (118:6) {#each range(width) as x}
   function create_each_block_1(ctx) {
     var current
 
@@ -1520,13 +1713,13 @@
       block,
       id: create_each_block_1.name,
       type: 'each',
-      source: '(116:6) {#each range(width) as x}',
+      source: '(118:6) {#each range(width) as x}',
       ctx
     })
     return block
   }
 
-  // (114:2) {#each range(height) as y}
+  // (116:2) {#each range(height) as y}
   function create_each_block(ctx) {
     var div, t, current
 
@@ -1555,7 +1748,7 @@
 
         t = space()
         attr_dev(div, 'class', 'row svelte-12brb26')
-        add_location(div, file$2, 114, 4, 2415)
+        add_location(div, file$2, 116, 4, 2443)
       },
 
       m: function mount(target, anchor) {
@@ -1626,13 +1819,13 @@
       block,
       id: create_each_block.name,
       type: 'each',
-      source: '(114:2) {#each range(height) as y}',
+      source: '(116:2) {#each range(height) as y}',
       ctx
     })
     return block
   }
 
-  // (126:0) {#if solveTime.count > 0}
+  // (128:0) {#if solveTime.count > 0}
   function create_if_block$2(ctx) {
     var t0,
       t1_value = ctx.Math.round(ctx.solveTime.total / ctx.solveTime.count) + '',
@@ -1687,7 +1880,7 @@
       block,
       id: create_if_block$2.name,
       type: 'if',
-      source: '(126:0) {#if solveTime.count > 0}',
+      source: '(128:0) {#if solveTime.count > 0}',
       ctx
     })
     return block
@@ -1817,17 +2010,17 @@
         t12 = space()
         if (if_block1) if_block1.c()
         if_block1_anchor = empty()
-        add_location(span0, file$2, 104, 2, 2114)
+        add_location(span0, file$2, 106, 2, 2142)
         attr_dev(
           span1,
           'class',
           (span1_class_value = 'state-' + ctx.state + ' svelte-12brb26')
         )
-        add_location(span1, file$2, 105, 2, 2155)
+        add_location(span1, file$2, 107, 2, 2183)
         attr_dev(div0, 'class', 'info svelte-12brb26')
-        add_location(div0, file$2, 103, 0, 2093)
+        add_location(div0, file$2, 105, 0, 2121)
         attr_dev(div1, 'class', 'board')
-        add_location(div1, file$2, 112, 0, 2362)
+        add_location(div1, file$2, 114, 0, 2390)
 
         dispose = [
           listen_dev(window, 'keydown', ctx.keydown_handler),
@@ -2065,7 +2258,7 @@
   const WON = 'w'
 
   function instance$2($$self, $$props, $$invalidate) {
-    let { width = 10, height = 10, mines = 10 } = $$props
+    let { seed, width = 10, height = 10, mines = 10 } = $$props
 
     let mark = false
     let state = PLAYING
@@ -2082,6 +2275,7 @@
     )
 
     const board = createBoard(
+      seed,
       width,
       height,
       mines,
@@ -2122,7 +2316,7 @@
     let hover = 0
     let cheat = false
 
-    const writable_props = ['width', 'height', 'mines']
+    const writable_props = ['seed', 'width', 'height', 'mines']
     Object.keys($$props).forEach(key => {
       if (!writable_props.includes(key) && !key.startsWith('$$'))
         console.warn(`<Board> was created with unknown prop '${key}'`)
@@ -2152,6 +2346,7 @@
     const click_handler = ({ y, x }) => handleClick(width * y + x)
 
     $$self.$set = $$props => {
+      if ('seed' in $$props) $$invalidate('seed', (seed = $$props.seed))
       if ('width' in $$props) $$invalidate('width', (width = $$props.width))
       if ('height' in $$props) $$invalidate('height', (height = $$props.height))
       if ('mines' in $$props) $$invalidate('mines', (mines = $$props.mines))
@@ -2159,6 +2354,7 @@
 
     $$self.$capture_state = () => {
       return {
+        seed,
         width,
         height,
         mines,
@@ -2175,6 +2371,7 @@
     }
 
     $$self.$inject_state = $$props => {
+      if ('seed' in $$props) $$invalidate('seed', (seed = $$props.seed))
       if ('width' in $$props) $$invalidate('width', (width = $$props.width))
       if ('height' in $$props) $$invalidate('height', (height = $$props.height))
       if ('mines' in $$props) $$invalidate('mines', (mines = $$props.mines))
@@ -2206,6 +2403,7 @@
     }
 
     return {
+      seed,
       width,
       height,
       mines,
@@ -2233,6 +2431,7 @@
     constructor(options) {
       super(options)
       init(this, options, instance$2, create_fragment$2, safe_not_equal, [
+        'seed',
         'width',
         'height',
         'mines'
@@ -2243,6 +2442,24 @@
         options,
         id: create_fragment$2.name
       })
+
+      const { ctx } = this.$$
+      const props = options.props || {}
+      if (ctx.seed === undefined && !('seed' in props)) {
+        console.warn("<Board> was created without expected prop 'seed'")
+      }
+    }
+
+    get seed() {
+      throw new Error(
+        "<Board>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'"
+      )
+    }
+
+    set seed(value) {
+      throw new Error(
+        "<Board>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'"
+      )
     }
 
     get width() {
@@ -2286,7 +2503,7 @@
 
   const file$3 = 'src/App.svelte'
 
-  // (91:0) {:else}
+  // (99:0) {:else}
   function create_else_block$2(ctx) {
     var a,
       t0,
@@ -2302,7 +2519,9 @@
       input2,
       input2_updating = false,
       t5,
+      input3,
       t6,
+      t7,
       current,
       dispose
 
@@ -2346,32 +2565,38 @@
         input1 = element('input')
         t4 = text('\n    with\n    ')
         input2 = element('input')
-        t5 = text('\n    mines.   \n    ')
+        t5 = text('\n    mines and a seed of\n    ')
+        input3 = element('input')
+        t6 = text('\n      \n    ')
         button.$$.fragment.c()
-        t6 = space()
+        t7 = space()
         if (if_block) if_block.c()
         attr_dev(a, 'href', 'https://github.com/RedHatter/minesweeper')
         attr_dev(a, 'target', '_blank')
-        attr_dev(a, 'class', 'svelte-mms4yy')
-        add_location(a, file$3, 91, 2, 2000)
-        attr_dev(h1, 'class', 'svelte-mms4yy')
-        add_location(h1, file$3, 93, 4, 2082)
+        attr_dev(a, 'class', 'svelte-nad8ff')
+        add_location(a, file$3, 99, 2, 2143)
+        attr_dev(h1, 'class', 'svelte-nad8ff')
+        add_location(h1, file$3, 101, 4, 2225)
         attr_dev(input0, 'type', 'number')
-        attr_dev(input0, 'class', 'svelte-mms4yy')
-        add_location(input0, file$3, 95, 4, 2116)
+        attr_dev(input0, 'class', 'svelte-nad8ff')
+        add_location(input0, file$3, 103, 4, 2259)
         attr_dev(input1, 'type', 'number')
-        attr_dev(input1, 'class', 'svelte-mms4yy')
-        add_location(input1, file$3, 97, 4, 2170)
+        attr_dev(input1, 'class', 'svelte-nad8ff')
+        add_location(input1, file$3, 105, 4, 2313)
         attr_dev(input2, 'type', 'number')
-        attr_dev(input2, 'class', 'svelte-mms4yy')
-        add_location(input2, file$3, 99, 4, 2227)
-        attr_dev(div, 'class', 'svelte-mms4yy')
-        add_location(div, file$3, 92, 2, 2072)
+        attr_dev(input2, 'class', 'svelte-nad8ff')
+        add_location(input2, file$3, 107, 4, 2370)
+        attr_dev(input3, 'type', 'text')
+        attr_dev(input3, 'class', 'svelte-nad8ff')
+        add_location(input3, file$3, 109, 4, 2441)
+        attr_dev(div, 'class', 'svelte-nad8ff')
+        add_location(div, file$3, 100, 2, 2215)
 
         dispose = [
           listen_dev(input0, 'input', input0_input_handler),
           listen_dev(input1, 'input', input1_input_handler),
-          listen_dev(input2, 'input', input2_input_handler)
+          listen_dev(input2, 'input', input2_input_handler),
+          listen_dev(input3, 'input', ctx.input3_input_handler)
         ]
       },
 
@@ -2396,8 +2621,13 @@
         set_input_value(input2, ctx.mines)
 
         append_dev(div, t5)
-        mount_component(button, div, null)
+        append_dev(div, input3)
+
+        set_input_value(input3, ctx.seed)
+
         append_dev(div, t6)
+        mount_component(button, div, null)
+        append_dev(div, t7)
         if (if_block) if_block.m(div, null)
         current = true
       },
@@ -2412,6 +2642,8 @@
         if (!input2_updating && changed.mines)
           set_input_value(input2, ctx.mines)
         input2_updating = false
+        if (changed.seed && input3.value !== ctx.seed)
+          set_input_value(input3, ctx.seed)
 
         var button_changes = {}
         if (changed.disabled) button_changes.disabled = ctx.disabled
@@ -2459,13 +2691,13 @@
       block,
       id: create_else_block$2.name,
       type: 'else',
-      source: '(91:0) {:else}',
+      source: '(99:0) {:else}',
       ctx
     })
     return block
   }
 
-  // (86:0) {#if playing}
+  // (94:0) {#if playing}
   function create_if_block$3(ctx) {
     var div, t, current
 
@@ -2482,7 +2714,8 @@
       props: {
         width: ctx.width,
         height: ctx.height,
-        mines: ctx.mines
+        mines: ctx.mines,
+        seed: ctx.seed
       },
       $$inline: true
     })
@@ -2493,8 +2726,8 @@
         button.$$.fragment.c()
         t = space()
         board.$$.fragment.c()
-        attr_dev(div, 'class', 'svelte-mms4yy')
-        add_location(div, file$3, 86, 2, 1871)
+        attr_dev(div, 'class', 'svelte-nad8ff')
+        add_location(div, file$3, 94, 2, 2007)
       },
 
       m: function mount(target, anchor) {
@@ -2514,6 +2747,7 @@
         if (changed.width) board_changes.width = ctx.width
         if (changed.height) board_changes.height = ctx.height
         if (changed.mines) board_changes.mines = ctx.mines
+        if (changed.seed) board_changes.seed = ctx.seed
         board.$set(board_changes)
       },
 
@@ -2546,13 +2780,13 @@
       block,
       id: create_if_block$3.name,
       type: 'if',
-      source: '(86:0) {#if playing}',
+      source: '(94:0) {#if playing}',
       ctx
     })
     return block
   }
 
-  // (102:4) <Button on:click={() => (playing = true)} {disabled}>
+  // (112:4) <Button on:click={() => (playing = true)} {disabled}>
   function create_default_slot_1$1(ctx) {
     var t
 
@@ -2575,13 +2809,13 @@
       block,
       id: create_default_slot_1$1.name,
       type: 'slot',
-      source: '(102:4) <Button on:click={() => (playing = true)} {disabled}>',
+      source: '(112:4) <Button on:click={() => (playing = true)} {disabled}>',
       ctx
     })
     return block
   }
 
-  // (103:4) {#if disabled}
+  // (113:4) {#if disabled}
   function create_if_block_1$1(ctx) {
     var br, t
 
@@ -2589,7 +2823,7 @@
       c: function create() {
         br = element('br')
         t = text('\n      Too many mines.')
-        add_location(br, file$3, 103, 6, 2391)
+        add_location(br, file$3, 113, 6, 2595)
       },
 
       m: function mount(target, anchor) {
@@ -2608,13 +2842,13 @@
       block,
       id: create_if_block_1$1.name,
       type: 'if',
-      source: '(103:4) {#if disabled}',
+      source: '(113:4) {#if disabled}',
       ctx
     })
     return block
   }
 
-  // (88:4) <Button on:click={() => (playing = false)}>
+  // (96:4) <Button on:click={() => (playing = false)}>
   function create_default_slot$1(ctx) {
     var t
 
@@ -2637,7 +2871,7 @@
       block,
       id: create_default_slot$1.name,
       type: 'slot',
-      source: '(88:4) <Button on:click={() => (playing = false)}>',
+      source: '(96:4) <Button on:click={() => (playing = false)}>',
       ctx
     })
     return block
@@ -2737,6 +2971,9 @@
     let mines = 40
     let playing = false
 
+    let rand = new Prando()
+    let seed = rand.nextString(16)
+
     const click_handler = () => $$invalidate('playing', (playing = false))
 
     function input0_input_handler() {
@@ -2754,6 +2991,11 @@
       $$invalidate('mines', mines)
     }
 
+    function input3_input_handler() {
+      seed = this.value
+      $$invalidate('seed', seed)
+    }
+
     const click_handler_1 = () => $$invalidate('playing', (playing = true))
 
     $$self.$capture_state = () => {
@@ -2766,6 +3008,8 @@
       if ('mines' in $$props) $$invalidate('mines', (mines = $$props.mines))
       if ('playing' in $$props)
         $$invalidate('playing', (playing = $$props.playing))
+      if ('rand' in $$props) rand = $$props.rand
+      if ('seed' in $$props) $$invalidate('seed', (seed = $$props.seed))
       if ('disabled' in $$props)
         $$invalidate('disabled', (disabled = $$props.disabled))
     }
@@ -2783,11 +3027,13 @@
       height,
       mines,
       playing,
+      seed,
       disabled,
       click_handler,
       input0_input_handler,
       input1_input_handler,
       input2_input_handler,
+      input3_input_handler,
       click_handler_1
     }
   }

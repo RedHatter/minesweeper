@@ -1,6 +1,9 @@
+import Prando from 'prando'
 import { BLANK, MINE, HIDDEN, VISIBLE, UNKNOWN, FLAG, LOST } from './symbols.js'
 
-export function createBoard(width, height, mines, onWin, onLose) {
+export function createBoard(seed, width, height, mines, onWin, onLose) {
+  const rand = new Prando(seed)
+
   const size = width * height
   const board = Array(size).fill(BLANK)
   const flags = Array(size).fill(BLANK)
@@ -93,7 +96,7 @@ export function createBoard(width, height, mines, onWin, onLose) {
 
   // place mines
   for (let i = 0; i < mines; i++) {
-    const square = Math.floor(Math.random() * size)
+    const square = rand.nextInt(0, size)
     if (board[square] === MINE) {
       i-- // try again
       continue

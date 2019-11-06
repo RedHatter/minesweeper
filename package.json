@@ -12,6 +12,7 @@
     "format": "node --experimental-modules ./scripts/format.js"
   },
   "dependencies": {
+    "prando": "^5.1.1",
     "prettier": "git+https://github.com/RedHatter/prettier.git#sort-css",
     "prettier-plugin-svelte": "^0.7.0",
     "rollup": "^1.26.3",

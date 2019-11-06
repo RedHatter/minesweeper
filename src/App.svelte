@@ -1,4 +1,5 @@
 <script>
+  import Prando from 'prando'
   import Button from './Button.svelte'
   import Board from './Board.svelte'
 
@@ -6,6 +7,9 @@
   let height = 16
   let mines = 40
   let playing = false
+
+  let rand = new Prando()
+  let seed = rand.nextString(16)
 
   $: disabled = mines > width * height
 </script>
@@ -45,6 +49,10 @@
     font-family: 'Black Ops One';
   }
 
+  input[type='text'] {
+    width: 22rem;
+  }
+
   input {
     margin: 5px 0 15px;
     width: 3rem;
@@ -80,13 +88,17 @@
       width: 10vw;
       font-size: 8vw;
     }
+
+    input[type='text'] {
+      width: 80vw;
+    }
   }
 </style>
 
 {#if playing}
   <div>
     <Button on:click={() => (playing = false)}>New game</Button>
-    <Board {width} {height} {mines} />
+    <Board {width} {height} {mines} {seed} />
   </div>
 {:else}
   <a href="https://github.com/RedHatter/minesweeper" target="_blank" />
@@ -98,7 +110,9 @@
     <input type="number" bind:value={height} />
     with
     <input type="number" bind:value={mines} />
-    mines. &nbsp;&nbsp;
+    mines and a seed of
+    <input type="text" bind:value={seed} />
+    &nbsp;&nbsp;
     <Button on:click={() => (playing = true)} {disabled}>Begin</Button>
     {#if disabled}
       <br />
