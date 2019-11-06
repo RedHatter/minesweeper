@@ -32,9 +32,8 @@
     () => (state = LOST)
   )
 
-  let marked = 0
   function handleClick(i) {
-    if (mark) marked = board.mark(i)
+    if (mark) board.mark(i)
     else board.reveal(i)
 
     board = board
@@ -45,16 +44,19 @@
     total: 0,
     max: 0
   }
+
+  let solver
   function tickSolve() {
+    if (!solver) solver = solve(board)
+
     const t0 = performance.now()
-    const _marked = solve(board)
+    solver.tick()
     const t1 = performance.now()
     const delta = t1 - t0
     solveTime.count++
     solveTime.total += delta
     if (delta > solveTime.max) solveTime.max = delta
 
-    if (_marked > 0) marked = _marked
     board = board
     if (state === PLAYING) setTimeout(tickSolve, 200 - delta)
   }
@@ -100,7 +102,7 @@
 <Button on:click={tickSolve}>Solve</Button>
 <Button type="checkbox" bind:checked={cheat}>Cheat</Button>
 <div class="info">
-  <span>{marked} of {mines}</span>
+  <span>{board.marked} of {mines}</span>
   <span class="state-{state}">
     {Math.floor(time / 60)} : {(time % 60).toString().padStart(2, '0')}
   </span>

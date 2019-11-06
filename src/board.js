@@ -1,15 +1,23 @@
-import {
-  BLANK,
-  MINE,
-  HIDDEN,
-  VISIBLE,
-  UNKNOWN,
-  FLAG,
-  LOST
-} from './symbols.js'
+import { BLANK, MINE, HIDDEN, VISIBLE, UNKNOWN, FLAG, LOST } from './symbols.js'
 
 export function createBoard(width, height, mines, onWin, onLose) {
   const size = width * height
+  const board = Array(size).fill(BLANK)
+  const flags = Array(size).fill(BLANK)
+  const mask = Array(size).fill(HIDDEN)
+
+  const obj = {
+    marked: 0,
+    size,
+    mines,
+    flags,
+    reveal,
+    mark,
+    getAdjacent,
+    get(i) {
+      return mask[i] === HIDDEN ? HIDDEN : board[i]
+    }
+  }
 
   function getAdjacent(i) {
     const res = []
@@ -45,9 +53,11 @@ export function createBoard(width, height, mines, onWin, onLose) {
   let revealed = 0
   function reveal(i) {
     mask[i] = VISIBLE
+    const delta = [i]
     switch (board[i]) {
       case BLANK:
-        for (const n of getAdjacent(i)) if (mask[n] === HIDDEN) reveal(n)
+        for (const n of getAdjacent(i))
+          if (mask[n] === HIDDEN) delta.push(...reveal(n))
         break
 
       case MINE:
@@ -60,33 +70,26 @@ export function createBoard(width, height, mines, onWin, onLose) {
     revealed++
     if (revealed >= size - mines) onWin()
 
-    return board[i]
+    return delta
   }
 
-  let marked = 0
   function mark(i) {
     switch (flags[i]) {
       case BLANK:
         flags[i] = FLAG
-        marked++
+        obj.marked++
         break
 
       case FLAG:
         flags[i] = UNKNOWN
-        marked--
+        obj.marked--
         break
 
       case UNKNOWN:
         flags[i] = BLANK
         break
     }
-
-    return marked
   }
-
-  const board = Array(size).fill(BLANK)
-  const flags = Array(size).fill(BLANK)
-  const mask = Array(size).fill(HIDDEN)
 
   // place mines
   for (let i = 0; i < mines; i++) {
@@ -104,15 +107,5 @@ export function createBoard(width, height, mines, onWin, onLose) {
     }
   }
 
-  return {
-    size,
-    mines,
-    flags,
-    reveal,
-    mark,
-    getAdjacent,
-    get(i) {
-      return mask[i] === HIDDEN ? HIDDEN : board[i]
-    }
-  }
+  return obj
 }

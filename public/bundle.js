@@ -787,7 +787,7 @@
   const HIDDEN = false
   const VISIBLE = true
   const UNKNOWN = '?'
-  const ADJACENT = 'a'
+  const SAFE = '^'
   const FLAG = '!'
   const LOST = 'l'
 
@@ -1069,6 +1069,22 @@
 
   function createBoard(width, height, mines, onWin, onLose) {
     const size = width * height
+    const board = Array(size).fill(BLANK)
+    const flags = Array(size).fill(BLANK)
+    const mask = Array(size).fill(HIDDEN)
+
+    const obj = {
+      marked: 0,
+      size,
+      mines,
+      flags,
+      reveal,
+      mark,
+      getAdjacent,
+      get(i) {
+        return mask[i] === HIDDEN ? HIDDEN : board[i]
+      }
+    }
 
     function getAdjacent(i) {
       const res = []
@@ -1104,9 +1120,11 @@
     let revealed = 0
     function reveal(i) {
       mask[i] = VISIBLE
+      const delta = [i]
       switch (board[i]) {
         case BLANK:
-          for (const n of getAdjacent(i)) if (mask[n] === HIDDEN) reveal(n)
+          for (const n of getAdjacent(i))
+            if (mask[n] === HIDDEN) delta.push(...reveal(n))
           break
 
         case MINE:
@@ -1119,33 +1137,26 @@
       revealed++
       if (revealed >= size - mines) onWin()
 
-      return board[i]
+      return delta
     }
 
-    let marked = 0
     function mark(i) {
       switch (flags[i]) {
         case BLANK:
           flags[i] = FLAG
-          marked++
+          obj.marked++
           break
 
         case FLAG:
           flags[i] = UNKNOWN
-          marked--
+          obj.marked--
           break
 
         case UNKNOWN:
           flags[i] = BLANK
           break
       }
-
-      return marked
     }
-
-    const board = Array(size).fill(BLANK)
-    const flags = Array(size).fill(BLANK)
-    const mask = Array(size).fill(HIDDEN)
 
     // place mines
     for (let i = 0; i < mines; i++) {
@@ -1163,17 +1174,7 @@
       }
     }
 
-    return {
-      size,
-      mines,
-      flags,
-      reveal,
-      mark,
-      getAdjacent,
-      get(i) {
-        return mask[i] === HIDDEN ? HIDDEN : board[i]
-      }
-    }
+    return obj
   }
 
   function range(start, stop, step) {
@@ -1204,82 +1205,59 @@
   }
 
   function getProbability(board, i) {
-    return getProbabilityList(board)[i]
+    let solutionList = [Array(board.size).fill(UNKNOWN)]
+    solutionList = updateSolutionList(board, range(board.size), solutionList)
+    const list = getProbabilityList(solutionList, board)
+    return list[i]
   }
 
   function solve(board) {
-    const list = getProbabilityList(board)
-    let marked = 0
-    let min = 1
-    let square
-    for (let i = 0; i < board.size; i++) {
-      if (list[i] === VISIBLE) continue
-      if (list[i] === 1 && board.flags[i] !== FLAG) marked = board.mark(i)
-      else if (list[i] < min) {
-        min = list[i]
-        square = i
-      }
-    }
-
-    board.reveal(square)
-    return marked
-  }
-
-  function getProbabilityList(board) {
     const { size } = board
 
     // blank base solution
     let solutionList = [Array(size).fill(UNKNOWN)]
 
-    // calculate all possible mine positions
-    for (let i = 0; i < size; i++) {
-      const n = board.get(i)
-      if (n === HIDDEN || n === BLANK) continue // only fork for squares adjacent to mines
+    return {
+      tick() {
+        const list = getProbabilityList(solutionList, board)
+        let min = 1
+        let square
+        for (let i = 0; i < size; i++) {
+          if (list[i] === VISIBLE) continue
+          if (list[i] === 1 && board.flags[i] !== FLAG) board.mark(i)
+          else if (list[i] < min) {
+            min = list[i]
+            square = i
+          }
+        }
 
-      // find possible mine locations
-      const adjacent = board.getAdjacent(i).filter(i => board.get(i) === HIDDEN)
-
-      if (!adjacent.length) continue
-
-      const _solutionList = []
-      for (const solution of solutionList) {
-        for (const i of adjacent)
-          if (solution[i] !== MINE) solution[i] = ADJACENT
-
-        // place n mines in all possible permutations
-        _solutionList.push(
-          ...combinations(n, adjacent)
-            .map(o => {
-              const forked = JSON.parse(JSON.stringify(solution))
-              for (const i of o) forked[i] = MINE
-              return forked
-            })
-            .filter(validate) // remove illegal solutions
+        solutionList = updateSolutionList(
+          board,
+          board.reveal(square),
+          solutionList
         )
       }
+    }
+  }
 
-      solutionList = _solutionList
+  function getProbabilityList(solutionList, board) {
+    let squares = 0
+    let mines = board.mines
+    for (let i = 0; i < board.size; i++) {
+      if (solutionList[0][i] === MINE) mines--
+      if (solutionList[0][i] === UNKNOWN && board.get(i) === HIDDEN) squares++
     }
 
-    for (const solution of solutionList) {
-      let mines = board.mines
-      let squares = 0
-      for (let i = 0; i < size; i++)
-        if (solution[i] === MINE) mines--
-        else if (solution[i] !== ADJACENT) squares++
+    const base = mines / squares
 
-      solution.base = mines / squares
-    }
-
+    // fold list of solutions into probabilities
     const probabilityList = []
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < board.size; i++) {
       const n = board.get(i)
       if (n !== HIDDEN) {
         probabilityList.push(VISIBLE)
       } else if (solutionList[0][i] === UNKNOWN) {
-        let total = 0
-        for (const solution of solutionList) total += solution.base
-        probabilityList.push(total / solutionList.length)
+        probabilityList.push(base)
       } else {
         let weight = 0
         for (const solution of solutionList) if (solution[i] === MINE) weight++
@@ -1288,23 +1266,47 @@
       }
     }
 
-    function validate(solution) {
-      for (let i = 0; i < size; i++) {
-        // only check squares adjacent to mines
-        let n = board.get(i)
-        if (n === HIDDEN || n === BLANK) continue
+    return probabilityList
+  }
 
-        // count mines
-        for (const a of board.getAdjacent(i)) if (solution[a] === MINE) n--
-
-        // too many mines
-        if (n < 0) return false
+  function updateSolutionList(board, delta, solutionList) {
+    for (const i of delta) {
+      const n = board.get(i)
+      if (n === HIDDEN || n === BLANK) {
+        continue // only fork for squares adjacent to mines
       }
 
-      return true
+      // find possible mine locations
+      const adjacent = board.getAdjacent(i).filter(i => board.get(i) === HIDDEN)
+
+      if (!adjacent.length) continue
+      const mineList = combinations(n, adjacent)
+
+      const _solutionList = []
+      for (const solution of solutionList) {
+        l: for (const o of mineList) {
+          const forked = solution.slice()
+
+          for (const i of o) {
+            if (forked[i] == SAFE) continue l
+            forked[i] = MINE
+          }
+
+          for (const i of adjacent) {
+            if (o.includes(i)) continue
+            if (forked[i] === MINE) continue l
+
+            forked[i] = SAFE
+          }
+
+          _solutionList.push(forked)
+        }
+      }
+
+      solutionList = _solutionList
     }
 
-    return probabilityList
+    return solutionList
   }
 
   /* src/Board.svelte generated by Svelte v3.12.1 */
@@ -1323,7 +1325,7 @@
     return child_ctx
   }
 
-  // (100:0) <Button type="checkbox" bind:checked={mark}>
+  // (101:0) <Button type="checkbox" bind:checked={mark}>
   function create_default_slot_2(ctx) {
     var t
 
@@ -1346,13 +1348,13 @@
       block,
       id: create_default_slot_2.name,
       type: 'slot',
-      source: '(100:0) <Button type="checkbox" bind:checked={mark}>',
+      source: '(101:0) <Button type="checkbox" bind:checked={mark}>',
       ctx
     })
     return block
   }
 
-  // (101:0) <Button on:click={tickSolve}>
+  // (102:0) <Button on:click={tickSolve}>
   function create_default_slot_1(ctx) {
     var t
 
@@ -1375,13 +1377,13 @@
       block,
       id: create_default_slot_1.name,
       type: 'slot',
-      source: '(101:0) <Button on:click={tickSolve}>',
+      source: '(102:0) <Button on:click={tickSolve}>',
       ctx
     })
     return block
   }
 
-  // (102:0) <Button type="checkbox" bind:checked={cheat}>
+  // (103:0) <Button type="checkbox" bind:checked={cheat}>
   function create_default_slot(ctx) {
     var t
 
@@ -1404,13 +1406,13 @@
       block,
       id: create_default_slot.name,
       type: 'slot',
-      source: '(102:0) <Button type="checkbox" bind:checked={cheat}>',
+      source: '(103:0) <Button type="checkbox" bind:checked={cheat}>',
       ctx
     })
     return block
   }
 
-  // (108:2) {#if cheat}
+  // (109:2) {#if cheat}
   function create_if_block_1(ctx) {
     var span,
       t0_value = ctx.Math.round(ctx.probability * 100) + '',
@@ -1422,7 +1424,7 @@
         span = element('span')
         t0 = text(t0_value)
         t1 = text('% chance of a mine')
-        add_location(span, file$2, 108, 4, 2358)
+        add_location(span, file$2, 109, 4, 2284)
       },
 
       m: function mount(target, anchor) {
@@ -1450,13 +1452,13 @@
       block,
       id: create_if_block_1.name,
       type: 'if',
-      source: '(108:2) {#if cheat}',
+      source: '(109:2) {#if cheat}',
       ctx
     })
     return block
   }
 
-  // (115:6) {#each range(width) as x}
+  // (116:6) {#each range(width) as x}
   function create_each_block_1(ctx) {
     var current
 
@@ -1518,13 +1520,13 @@
       block,
       id: create_each_block_1.name,
       type: 'each',
-      source: '(115:6) {#each range(width) as x}',
+      source: '(116:6) {#each range(width) as x}',
       ctx
     })
     return block
   }
 
-  // (113:2) {#each range(height) as y}
+  // (114:2) {#each range(height) as y}
   function create_each_block(ctx) {
     var div, t, current
 
@@ -1553,7 +1555,7 @@
 
         t = space()
         attr_dev(div, 'class', 'row svelte-12brb26')
-        add_location(div, file$2, 113, 4, 2489)
+        add_location(div, file$2, 114, 4, 2415)
       },
 
       m: function mount(target, anchor) {
@@ -1624,13 +1626,13 @@
       block,
       id: create_each_block.name,
       type: 'each',
-      source: '(113:2) {#each range(height) as y}',
+      source: '(114:2) {#each range(height) as y}',
       ctx
     })
     return block
   }
 
-  // (125:0) {#if solveTime.count > 0}
+  // (126:0) {#if solveTime.count > 0}
   function create_if_block$2(ctx) {
     var t0,
       t1_value = ctx.Math.round(ctx.solveTime.total / ctx.solveTime.count) + '',
@@ -1685,7 +1687,7 @@
       block,
       id: create_if_block$2.name,
       type: 'if',
-      source: '(125:0) {#if solveTime.count > 0}',
+      source: '(126:0) {#if solveTime.count > 0}',
       ctx
     })
     return block
@@ -1699,6 +1701,7 @@
       t2,
       div0,
       span0,
+      t3_value = ctx.board.marked + '',
       t3,
       t4,
       t5,
@@ -1794,7 +1797,7 @@
         t2 = space()
         div0 = element('div')
         span0 = element('span')
-        t3 = text(ctx.marked)
+        t3 = text(t3_value)
         t4 = text(' of ')
         t5 = text(ctx.mines)
         t6 = space()
@@ -1814,17 +1817,17 @@
         t12 = space()
         if (if_block1) if_block1.c()
         if_block1_anchor = empty()
-        add_location(span0, file$2, 103, 2, 2194)
+        add_location(span0, file$2, 104, 2, 2114)
         attr_dev(
           span1,
           'class',
           (span1_class_value = 'state-' + ctx.state + ' svelte-12brb26')
         )
-        add_location(span1, file$2, 104, 2, 2229)
+        add_location(span1, file$2, 105, 2, 2155)
         attr_dev(div0, 'class', 'info svelte-12brb26')
-        add_location(div0, file$2, 102, 0, 2173)
+        add_location(div0, file$2, 103, 0, 2093)
         attr_dev(div1, 'class', 'board')
-        add_location(div1, file$2, 111, 0, 2436)
+        add_location(div1, file$2, 112, 0, 2362)
 
         dispose = [
           listen_dev(window, 'keydown', ctx.keydown_handler),
@@ -1889,8 +1892,11 @@
         }
         button2.$set(button2_changes)
 
-        if (!current || changed.marked) {
-          set_data_dev(t3, ctx.marked)
+        if (
+          (!current || changed.board) &&
+          t3_value !== (t3_value = ctx.board.marked + '')
+        ) {
+          set_data_dev(t3, t3_value)
         }
 
         if (!current || changed.mines) {
@@ -2083,9 +2089,8 @@
       () => $$invalidate('state', (state = LOST$1))
     )
 
-    let marked = 0
     function handleClick(i) {
-      if (mark) $$invalidate('marked', (marked = board.mark(i)))
+      if (mark) board.mark(i)
       else board.reveal(i)
 
       $$invalidate('board', board)
@@ -2096,9 +2101,13 @@
       total: 0,
       max: 0
     }
+
+    let solver
     function tickSolve() {
+      if (!solver) solver = solve(board)
+
       const t0 = performance.now()
-      const _marked = solve(board)
+      solver.tick()
       const t1 = performance.now()
       const delta = t1 - t0
       $$invalidate('solveTime', solveTime.count++, solveTime)
@@ -2106,10 +2115,8 @@
       if (delta > solveTime.max)
         $$invalidate('solveTime', (solveTime.max = delta), solveTime)
 
-      if (_marked > 0) $$invalidate('marked', (marked = _marked))
       $$invalidate('board', board)
       if (state === PLAYING) setTimeout(tickSolve, 200 - delta)
-      // if (state === PLAYING) setTimeout(tickSolve, 1)
     }
 
     let hover = 0
@@ -2159,8 +2166,8 @@
         state,
         _time,
         time,
-        marked,
         solveTime,
+        solver,
         hover,
         cheat,
         probability
@@ -2175,9 +2182,9 @@
       if ('state' in $$props) $$invalidate('state', (state = $$props.state))
       if ('_time' in $$props) _time = $$props._time
       if ('time' in $$props) $$invalidate('time', (time = $$props.time))
-      if ('marked' in $$props) $$invalidate('marked', (marked = $$props.marked))
       if ('solveTime' in $$props)
         $$invalidate('solveTime', (solveTime = $$props.solveTime))
+      if ('solver' in $$props) solver = $$props.solver
       if ('hover' in $$props) $$invalidate('hover', (hover = $$props.hover))
       if ('cheat' in $$props) $$invalidate('cheat', (cheat = $$props.cheat))
       if ('probability' in $$props)
@@ -2206,7 +2213,6 @@
       state,
       time,
       board,
-      marked,
       handleClick,
       solveTime,
       tickSolve,
