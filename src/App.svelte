@@ -54,11 +54,17 @@
     text-align: center;
     font-size: 2rem;
     transition: border-color 0.3s;
+    -moz-appearance: textfield;
   }
 
   input:hover,
   input:focus {
     border-color: gray;
+  }
+
+  input::-webkit-inner-spin-button,
+  input::-webkit-outer-spin-button {
+    display: none;
   }
 
   @media (max-width: 560px) {
@@ -87,11 +93,11 @@
   <div>
     <h1>Minesweeper</h1>
     Play
-    <input bind:value={width} />
+    <input type="number" bind:value={width} />
     by
-    <input bind:value={height} />
+    <input type="number" bind:value={height} />
     with
-    <input bind:value={mines} />
+    <input type="number" bind:value={mines} />
     mines. &nbsp;&nbsp;
     <Button on:click={() => (playing = true)} {disabled}>Begin</Button>
     {#if disabled}

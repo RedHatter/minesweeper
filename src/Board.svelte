@@ -33,9 +33,9 @@
   )
 
   let marked = 0
-  function handleClick(x, y) {
-    if (mark) marked = board.mark(x, y)
-    else board.reveal(x, y)
+  function handleClick(i) {
+    if (mark) marked = board.mark(i)
+    else board.reveal(i)
 
     board = board
   }
@@ -59,9 +59,9 @@
     if (state === PLAYING) setTimeout(tickSolve, 200 - delta)
   }
 
-  let hover = { x: 0, y: 0 }
+  let hover = 0
   let cheat = false
-  $: probability = cheat ? getProbability(board, hover.x, hover.y) : 0
+  $: probability = cheat ? getProbability(board, hover) : 0
 </script>
 
 <style>
@@ -109,18 +109,18 @@
   {/if}
 </div>
 <div class="board">
-  {#each range(width) as x}
+  {#each range(height) as y}
     <div class="row">
-      {#each range(height) as y}
+      {#each range(width) as x}
         <Cell
-          value={board.get(x, y)}
-          flag={board.flags[x][y]}
-          on:mouseenter={() => (hover = { x, y })}
-          on:click={() => handleClick(x, y)} />
+          value={board.get(width * y + x)}
+          flag={board.flags[width * y + x]}
+          on:mouseenter={() => (hover = width * y + x)}
+          on:click={() => handleClick(width * y + x)} />
       {/each}
     </div>
   {/each}
 </div>
 {#if solveTime.count > 0}
-  Avg: {Math.round(solveTime.total/solveTime.count)}, Max: {Math.round(solveTime.max)}
+  Avg: {Math.round(solveTime.total / solveTime.count)}, Max: {Math.round(solveTime.max)}
 {/if}
