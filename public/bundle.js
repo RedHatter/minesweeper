@@ -2503,11 +2503,11 @@
 
   const file$3 = 'src/App.svelte'
 
-  // (99:0) {:else}
+  // (103:0) {:else}
   function create_else_block$2(ctx) {
     var a,
       t0,
-      div,
+      form,
       h1,
       t2,
       input0,
@@ -2542,13 +2542,13 @@
 
     var button = new Button({
       props: {
+        type: 'submit',
         disabled: ctx.disabled,
         $$slots: { default: [create_default_slot_1$1] },
         $$scope: { ctx }
       },
       $$inline: true
     })
-    button.$on('click', ctx.click_handler_1)
 
     var if_block = ctx.disabled && create_if_block_1$1(ctx)
 
@@ -2556,7 +2556,7 @@
       c: function create() {
         a = element('a')
         t0 = space()
-        div = element('div')
+        form = element('form')
         h1 = element('h1')
         h1.textContent = 'Minesweeper'
         t2 = text('\n    Play\n    ')
@@ -2573,62 +2573,63 @@
         if (if_block) if_block.c()
         attr_dev(a, 'href', 'https://github.com/RedHatter/minesweeper')
         attr_dev(a, 'target', '_blank')
-        attr_dev(a, 'class', 'svelte-nad8ff')
-        add_location(a, file$3, 99, 2, 2143)
-        attr_dev(h1, 'class', 'svelte-nad8ff')
-        add_location(h1, file$3, 101, 4, 2225)
+        attr_dev(a, 'class', 'svelte-o2hciz')
+        add_location(a, file$3, 103, 2, 2206)
+        attr_dev(h1, 'class', 'svelte-o2hciz')
+        add_location(h1, file$3, 105, 4, 2324)
         attr_dev(input0, 'type', 'number')
-        attr_dev(input0, 'class', 'svelte-nad8ff')
-        add_location(input0, file$3, 103, 4, 2259)
+        attr_dev(input0, 'class', 'svelte-o2hciz')
+        add_location(input0, file$3, 107, 4, 2358)
         attr_dev(input1, 'type', 'number')
-        attr_dev(input1, 'class', 'svelte-nad8ff')
-        add_location(input1, file$3, 105, 4, 2313)
+        attr_dev(input1, 'class', 'svelte-o2hciz')
+        add_location(input1, file$3, 109, 4, 2412)
         attr_dev(input2, 'type', 'number')
-        attr_dev(input2, 'class', 'svelte-nad8ff')
-        add_location(input2, file$3, 107, 4, 2370)
+        attr_dev(input2, 'class', 'svelte-o2hciz')
+        add_location(input2, file$3, 111, 4, 2469)
         attr_dev(input3, 'type', 'text')
-        attr_dev(input3, 'class', 'svelte-nad8ff')
-        add_location(input3, file$3, 109, 4, 2441)
-        attr_dev(div, 'class', 'svelte-nad8ff')
-        add_location(div, file$3, 100, 2, 2215)
+        attr_dev(input3, 'class', 'svelte-o2hciz')
+        add_location(input3, file$3, 113, 4, 2540)
+        attr_dev(form, 'class', 'svelte-o2hciz')
+        add_location(form, file$3, 104, 2, 2278)
 
         dispose = [
           listen_dev(input0, 'input', input0_input_handler),
           listen_dev(input1, 'input', input1_input_handler),
           listen_dev(input2, 'input', input2_input_handler),
-          listen_dev(input3, 'input', ctx.input3_input_handler)
+          listen_dev(input3, 'input', ctx.input3_input_handler),
+          listen_dev(form, 'submit', ctx.submit_handler)
         ]
       },
 
       m: function mount(target, anchor) {
         insert_dev(target, a, anchor)
         insert_dev(target, t0, anchor)
-        insert_dev(target, div, anchor)
-        append_dev(div, h1)
-        append_dev(div, t2)
-        append_dev(div, input0)
+        insert_dev(target, form, anchor)
+        append_dev(form, h1)
+        append_dev(form, t2)
+        append_dev(form, input0)
 
         set_input_value(input0, ctx.width)
 
-        append_dev(div, t3)
-        append_dev(div, input1)
+        append_dev(form, t3)
+        append_dev(form, input1)
 
         set_input_value(input1, ctx.height)
 
-        append_dev(div, t4)
-        append_dev(div, input2)
+        append_dev(form, t4)
+        append_dev(form, input2)
 
         set_input_value(input2, ctx.mines)
 
-        append_dev(div, t5)
-        append_dev(div, input3)
+        append_dev(form, t5)
+        append_dev(form, input3)
 
         set_input_value(input3, ctx.seed)
 
-        append_dev(div, t6)
-        mount_component(button, div, null)
-        append_dev(div, t7)
-        if (if_block) if_block.m(div, null)
+        append_dev(form, t6)
+        mount_component(button, form, null)
+        append_dev(form, t7)
+        if (if_block) if_block.m(form, null)
         current = true
       },
 
@@ -2654,7 +2655,7 @@
           if (!if_block) {
             if_block = create_if_block_1$1(ctx)
             if_block.c()
-            if_block.m(div, null)
+            if_block.m(form, null)
           }
         } else if (if_block) {
           if_block.d(1)
@@ -2678,7 +2679,7 @@
         if (detaching) {
           detach_dev(a)
           detach_dev(t0)
-          detach_dev(div)
+          detach_dev(form)
         }
 
         destroy_component(button)
@@ -2691,13 +2692,13 @@
       block,
       id: create_else_block$2.name,
       type: 'else',
-      source: '(99:0) {:else}',
+      source: '(103:0) {:else}',
       ctx
     })
     return block
   }
 
-  // (94:0) {#if playing}
+  // (98:0) {#if playing}
   function create_if_block$3(ctx) {
     var div, t, current
 
@@ -2726,8 +2727,8 @@
         button.$$.fragment.c()
         t = space()
         board.$$.fragment.c()
-        attr_dev(div, 'class', 'svelte-nad8ff')
-        add_location(div, file$3, 94, 2, 2007)
+        attr_dev(div, 'class', 'svelte-o2hciz')
+        add_location(div, file$3, 98, 2, 2070)
       },
 
       m: function mount(target, anchor) {
@@ -2780,13 +2781,13 @@
       block,
       id: create_if_block$3.name,
       type: 'if',
-      source: '(94:0) {#if playing}',
+      source: '(98:0) {#if playing}',
       ctx
     })
     return block
   }
 
-  // (112:4) <Button on:click={() => (playing = true)} {disabled}>
+  // (116:4) <Button type="submit" {disabled}>
   function create_default_slot_1$1(ctx) {
     var t
 
@@ -2809,13 +2810,13 @@
       block,
       id: create_default_slot_1$1.name,
       type: 'slot',
-      source: '(112:4) <Button on:click={() => (playing = true)} {disabled}>',
+      source: '(116:4) <Button type="submit" {disabled}>',
       ctx
     })
     return block
   }
 
-  // (113:4) {#if disabled}
+  // (117:4) {#if disabled}
   function create_if_block_1$1(ctx) {
     var br, t
 
@@ -2823,7 +2824,7 @@
       c: function create() {
         br = element('br')
         t = text('\n      Too many mines.')
-        add_location(br, file$3, 113, 6, 2595)
+        add_location(br, file$3, 117, 6, 2674)
       },
 
       m: function mount(target, anchor) {
@@ -2842,13 +2843,13 @@
       block,
       id: create_if_block_1$1.name,
       type: 'if',
-      source: '(113:4) {#if disabled}',
+      source: '(117:4) {#if disabled}',
       ctx
     })
     return block
   }
 
-  // (96:4) <Button on:click={() => (playing = false)}>
+  // (100:4) <Button on:click={() => (playing = false)}>
   function create_default_slot$1(ctx) {
     var t
 
@@ -2871,7 +2872,7 @@
       block,
       id: create_default_slot$1.name,
       type: 'slot',
-      source: '(96:4) <Button on:click={() => (playing = false)}>',
+      source: '(100:4) <Button on:click={() => (playing = false)}>',
       ctx
     })
     return block
@@ -2996,7 +2997,7 @@
       $$invalidate('seed', seed)
     }
 
-    const click_handler_1 = () => $$invalidate('playing', (playing = true))
+    const submit_handler = () => $$invalidate('playing', (playing = true))
 
     $$self.$capture_state = () => {
       return {}
@@ -3034,7 +3035,7 @@
       input1_input_handler,
       input2_input_handler,
       input3_input_handler,
-      click_handler_1
+      submit_handler
     }
   }
 

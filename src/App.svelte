@@ -36,6 +36,7 @@
     opacity: 0.6;
   }
 
+  form,
   div {
     margin-top: 16px;
     text-align: center;
@@ -80,6 +81,7 @@
       font-size: 10vw;
     }
 
+    form,
     div {
       font-size: 5vw;
     }
@@ -102,7 +104,7 @@
   </div>
 {:else}
   <a href="https://github.com/RedHatter/minesweeper" target="_blank" />
-  <div>
+  <form on:submit={() => (playing = true)}>
     <h1>Minesweeper</h1>
     Play
     <input type="number" bind:value={width} />
@@ -113,10 +115,10 @@
     mines and a seed of
     <input type="text" bind:value={seed} />
     &nbsp;&nbsp;
-    <Button on:click={() => (playing = true)} {disabled}>Begin</Button>
+    <Button type="submit" {disabled}>Begin</Button>
     {#if disabled}
       <br />
       Too many mines.
     {/if}
-  </div>
+  </form>
 {/if}
